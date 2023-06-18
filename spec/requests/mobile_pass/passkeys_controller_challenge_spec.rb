@@ -1,4 +1,4 @@
-RSpec.describe MobilePass::PasskeysController, type: :request do
+RSpec.describe MobilePass::PasskeysController do
   it 'does some testing' do
     post '/challenge', params: { username: 'jerry' }
     expect(response.body).to eq "Troy"
