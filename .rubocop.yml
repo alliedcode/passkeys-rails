@@ -1,13 +1,205 @@
+require:
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-rspec
+
 AllCops:
-  TargetRubyVersion: 2.6
+  NewCops: enable
+  DisplayCopNames: true
+  StyleGuideCopsOnly: false
+  TargetRubyVersion: 3.1
+  Exclude:
+    - docs/**/*
+    - db/**/*
+    - script/**/*
+    - bin/**/*
+    - vendor/**/*
+    - tmp/**/*
+    - spec/fixtures/**/*
+    - config/initializers/**/*
+    - config/environments/**/*
+    - config/application.rb
+    - ./Gemfile
+    - ./Rakefile
+    - ./config.ru
+    - ./node_modules/**/*
+    - db/schema.rb
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - staging
+    - development
+    - test
+
+Rails:
+  Enabled: true
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/HasAndBelongsToMany:
+  Enabled: false
+
+Rails/InverseOf:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Layout/TrailingEmptyLines:
+  Enabled: false
+
+Layout/MultilineBlockLayout:
+  Exclude:
+    - spec/**/*
+
+Layout/MultilineMethodCallIndentation:
+  Exclude:
+    - spec/**/*
+
+RSpec/MultipleMemoizedHelpers:
+  Exclude:
+    - spec/**/*
 
 Style/StringLiterals:
-  Enabled: true
-  EnforcedStyle: double_quotes
+  Enabled: false
 
-Style/StringLiteralsInInterpolation:
-  Enabled: true
-  EnforcedStyle: double_quotes
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Style/BlockDelimiters:
+  Exclude:
+    - spec/**/*
+
+Style/StructInheritance:
+  Enabled: false
+
+Style/ParallelAssignment:
+  Enabled: false
+
+Style/RescueModifier:
+  Enabled: false
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: ()
+    '%i':   '[]'
+    '%I':   '[]'
+    '%r':   '{}'
+    '%w':   '[]'
+    '%W':   '[]'
+
+Style/FormatStringToken:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
 
 Layout/LineLength:
-  Max: 120
+  Enabled: true
+  Max: 150
+  Exclude:
+    - spec/**/*
+
+Metrics/MethodLength:
+  Enabled: true
+  Max: 20
+  Exclude:
+    - spec/**/*
+
+Metrics/BlockLength:
+  Exclude:
+    - app/admin/**/*
+    - spec/**/*
+    - lib/tasks/**/*
+
+# Metrics/ClassLength:
+#   Exclude:
+
+# Metrics/ParameterLists:
+#   Exclude:
+
+# Metrics/ModuleLength:
+#   Exclude:
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: false
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
+
+Style/EvalWithLocation:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+  EnforcedStyle: snake_case
+
+Naming/MemoizedInstanceVariableName:
+  Enabled: true
+  EnforcedStyleForLeadingUnderscores: required
+
+Lint/EmptyBlock:
+  Exclude:
+    - spec/factories/**/*
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExpectChange:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 10
+
+RSpec/RepeatedExampleGroupBody:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
