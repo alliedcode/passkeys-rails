@@ -183,7 +183,6 @@ Naming/VariableNumber:
 
 Naming/MemoizedInstanceVariableName:
   Enabled: true
-  EnforcedStyleForLeadingUnderscores: required
 
 Lint/EmptyBlock:
   Exclude:

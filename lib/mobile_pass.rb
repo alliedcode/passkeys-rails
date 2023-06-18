@@ -48,19 +48,19 @@ module MobilePass
     end
 
     def parent_controller
-      @_parent_controller ||= "ApplicationController"
+      @parent_controller ||= "ApplicationController"
     end
 
     def auth_token_secret
-      @_auth_token_secret ||= Rails.application.secret_key_base
+      @auth_token_secret ||= Rails.application.secret_key_base
     end
 
     def auth_token_algorithm
-      @_auth_token_algorithm ||= "HS256"
+      @auth_token_algorithm ||= "HS256"
     end
 
     def auth_token_expiration
-      @_auth_token_expiration ||= 30.days.from_now
+      @auth_token_expiration ||= 30.days.from_now
     end
   end
 end

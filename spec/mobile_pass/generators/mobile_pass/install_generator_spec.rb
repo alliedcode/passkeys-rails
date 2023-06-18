@@ -1,5 +1,6 @@
 require 'generators/mobile_pass/install_generator'
 
+# rubocop:disable RSpec/FilePath
 RSpec.describe MobilePass::Generators::InstallGenerator do
   before { remove_config }
 
@@ -9,4 +10,5 @@ RSpec.describe MobilePass::Generators::InstallGenerator do
     described_class.start
     expect(File.file?(config_file)).to be true
   end
+  # rubocop:enable RSpec/FilePath
 end

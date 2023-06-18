@@ -1,4 +1,5 @@
 module FileManager
+  # :reek:UtilityFunction
   def config_file
     Rails.root.join("config/mobile_pass.rb")
   end

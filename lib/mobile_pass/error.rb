@@ -1,14 +1,14 @@
 module MobilePass
   class Error < StandardError
-    attr_reader :context, :code
-    def initialize(context, code, message)
-      @context = context
-      @code = code
+    attr_reader :hash
+
+    def initialize(message, hash = {})
+      @hash = hash
       super(message)
     end
 
     def to_h
-      { error: { context:, code:, message: } }
+      { error: hash.merge(context: message) }
     end
   end
 end

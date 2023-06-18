@@ -20,10 +20,9 @@ class ValidateAuthToken
   end
 
   def payload
-    jwt_secret = MobilePass.auth_token_secret.presence || Rails.application.secret_key_base
-    jwt_algorithm = MobilePass.auth_token_algorithm
-
-    JWT.decode(auth_token, jwt_secret, jwt_algorithm).first
+    JWT.decode(auth_token,
+               MobilePass.auth_token_secret,
+               MobilePass.auth_token_algorithm).first
   rescue JWT::ExpiredSignature
     context.fail!(code: :expired_token, message: "The token has expired")
   rescue StandardError => e

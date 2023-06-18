@@ -12,7 +12,7 @@ class MobilePassController < MobilePass.parent_controller.constantize
   def current_user
     return nil if headers['X-Auth'].blank?
 
-    @_current_user ||= validated_auth_token!.user
+    @current_user ||= validated_auth_token!.user
   end
 
   def authenticate_user!
@@ -20,11 +20,11 @@ class MobilePassController < MobilePass.parent_controller.constantize
   end
 
   def validated_auth_token!
-    @_validated_auth_token ||= MobilePass::ValidateAuthToken.call!(auth_token: headers['X-Auth'])
+    @validated_auth_token ||= MobilePass::ValidateAuthToken.call!(auth_token: headers['X-Auth'])
   end
 
-  def handle_interactor_failure(failure)
-    raise MobilePass::Error.new(:authentication, failure.code, failure.message)
+  def handle_interactor_failure(context)
+    raise MobilePass::Error.new(:authentication, context.to_h)
   end
 
   def handle_mobile_pass_error(err)

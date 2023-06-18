@@ -4,19 +4,18 @@ class MobilePass::GenerateAuthToken
   delegate :user, to: :context
 
   def call
-    context.auth_token = auth_token(user)
+    context.auth_token = generate_auth_token
   end
 
   private
 
-  def auth_token(user)
-    jwt_secret = MobilePass.auth_token_secret.presence || Rails.application.secret_key_base
-    jwt_algorithm = MobilePass.auth_token_algorithm
-
-    JWT.encode(jwt_payload(user), jwt_secret, jwt_algorithm)
+  def generate_auth_token
+    JWT.encode(jwt_payload,
+               MobilePass.auth_token_secret,
+               MobilePass.auth_token_algorithm)
   end
 
-  def jwt_payload(user)
+  def jwt_payload
     expiration = MobilePass.auth_token_expiration.to_i
 
     payload = { user_id: user.id }

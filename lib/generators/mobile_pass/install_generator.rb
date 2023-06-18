@@ -8,7 +8,7 @@ module MobilePass
       desc 'Creates a MobilePass config file.'
 
       def copy_config
-        template 'mobile_pass_config.rb', "#{Rails.root}/config/mobile_pass.rb"
+        template 'mobile_pass_config.rb', Rails.root.join("config/mobile_pass.rb")
       end
     end
   end
