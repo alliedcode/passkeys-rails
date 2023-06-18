@@ -26,19 +26,9 @@ class MobilePass::FinishRegistration
       end
 
       context.user_name = user.username
-      context.auth_token = auth_token(user)
+      context.auth_token = MobilePass::GenerateAuthToken.call!(user:).auth_token
     rescue WebAuthn::Error => e
       context.fail!(code: :webauthn_error, message: e.message)
     end
-  end
-
-  private
-
-  def auth_token(user)
-    result = MobilePass::AuthToken.call(user:)
-
-    context.fail!(code: :token_generation_failed, message: "Unable to generate auth token") if result.failure?
-
-    result.auth_token
   end
 end

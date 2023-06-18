@@ -1,4 +1,4 @@
-class MobilePass::AuthToken
+class MobilePass::GenerateAuthToken
   include Interactor
 
   delegate :user, to: :context

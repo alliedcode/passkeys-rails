@@ -1,5 +1,6 @@
 class MobilePassController < MobilePass.parent_controller.constantize
-  rescue_from MobilePass::Error, with: :handle_exception
+  rescue_from MobilePass::Error, with: :handle_mobile_pass_error
+  rescue_from Interactor::Failure, with: :handle_interactor_failure
 
   if respond_to?(:helper_method)
     helpers = %w[current_user authenticate_user!]
@@ -9,25 +10,24 @@ class MobilePassController < MobilePass.parent_controller.constantize
   protected
 
   def current_user
-    @_current_user ||= validate_auth_token.user if validate_auth_token.success?
+    return nil if headers['X-Auth'].blank?
+
+    @_current_user ||= validated_auth_token!.user
   end
 
-  # Ignoring :reek:MissingSafeMethod
   def authenticate_user!
-    fail!(:authentication, validate_auth_token.code, validate_auth_token.message) if validate_auth_token.failure?
+    validated_auth_token!.success?
   end
 
-  def validate_auth_token
-    @_validate_auth_token ||= MobilePass::ValidateAuthToken.call auth_token: headers['X-Auth']
+  def validated_auth_token!
+    @_validated_auth_token ||= MobilePass::ValidateAuthToken.call!(auth_token: headers['X-Auth'])
   end
 
-  # Ignoring :reek:MissingSafeMethod
-  def fail!(context, code, message)
-    raise MobilePass::Error.new(context, code, message)
+  def handle_interactor_failure(failure)
+    raise MobilePass::Error.new(:authentication, failure.code, failure.message)
   end
 
-  # Ignoring :reek:UncommunicativeParameterName
-  def handle_exception(e)
-    render json: { error: { context: e.context, code: e.code, message: e.message } }, status: :unprocessable_entity
+  def handle_mobile_pass_error(err)
+    render json: err.to_h, status: :unprocessable_entity
   end
 end

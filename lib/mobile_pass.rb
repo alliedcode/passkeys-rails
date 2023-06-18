@@ -12,15 +12,15 @@ require "webauthn"
 module MobilePass
   autoload :Error, "mobile_pass/error"
 
-  autoload :BeginChallenge, "mobile_pass/services/begin_challenge"
-  autoload :BeginAuthentication, "mobile_pass/services/begin_authentication"
-  autoload :BeginRegistration, "mobile_pass/services/begin_registration"
-  autoload :FinishAuthentication, "mobile_pass/services/finish_authentication"
-  autoload :FinishRegistration, "mobile_pass/services/finish_registration"
+  autoload :BeginChallenge, "mobile_pass/interactors/begin_challenge"
+  autoload :BeginAuthentication, "mobile_pass/interactors/begin_authentication"
+  autoload :BeginRegistration, "mobile_pass/interactors/begin_registration"
+  autoload :FinishAuthentication, "mobile_pass/interactors/finish_authentication"
+  autoload :FinishRegistration, "mobile_pass/interactors/finish_registration"
 
-  autoload :AuthToken, "mobile_pass/services/auth_token"
-  autoload :ValidateAuthToken, "mobile_pass/services/validate_auth_token"
-  autoload :RefreshToken, "mobile_pass/services/refresh_token"
+  autoload :AuthToken, "mobile_pass/interactors/auth_token"
+  autoload :ValidateAuthToken, "mobile_pass/interactors/validate_auth_token"
+  autoload :RefreshToken, "mobile_pass/interactors/refresh_token"
 
   class << self
     # The parent controller from which all MobilePass controllers inherit.

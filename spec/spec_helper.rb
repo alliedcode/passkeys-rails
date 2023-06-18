@@ -23,9 +23,11 @@ require_relative '../spec/dummy/config/environment'
 ENV['RAILS_ROOT'] ||= "#{File.dirname(__FILE__)}../../../spec/dummy"
 
 require "mobile_pass"
+require 'rspec/rails'
 
 RSpec.configure do |config|
   config.include FileManager
+  config.infer_spec_type_from_file_location!
 
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
@@ -37,5 +39,3 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
-
-require 'rspec/rails'
