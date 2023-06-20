@@ -36,6 +36,9 @@ Rails/UnknownEnv:
 Gemspec/DevelopmentDependencies:
   Enabled: false
 
+RSpec/FilePath:
+  Enabled: false
+
 Rails:
   Enabled: true
 

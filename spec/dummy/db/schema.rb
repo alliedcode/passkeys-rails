@@ -12,15 +12,16 @@
 
 ActiveRecord::Schema[7.0].define(version: 2023_06_20_012600) do
   create_table "mobile_pass_agents", force: :cascade do |t|
-    t.string "username"
-    t.string "authenticatable_type", null: false
-    t.integer "authenticatable_id", null: false
+    t.string "username", null: false
+    t.string "authenticatable_type"
+    t.integer "authenticatable_id"
     t.string "webauthn_identifier"
     t.datetime "registered_at"
     t.datetime "last_authenticated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["authenticatable_type", "authenticatable_id"], name: "index_mobile_pass_agents_on_authenticatable", unique: true
+    t.index ["username"], name: "index_mobile_pass_agents_on_username", unique: true
   end
 
   create_table "mobile_pass_passkeys", force: :cascade do |t|

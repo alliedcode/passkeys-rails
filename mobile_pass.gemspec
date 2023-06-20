@@ -44,7 +44,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "reek", "~> 6.1.4"
 
-  spec.add_development_dependency "factory_bot", "~> 6.2.1"
+  spec.add_development_dependency "factory_bot_rails", "~> 6.2.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rspec-rails", "~> 6.0.3"
 

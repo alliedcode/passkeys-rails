@@ -10,7 +10,7 @@ module MobilePass
     end
 
     def register
-      result = MobilePass::FinishRegistration.call!(credential: credential_params,
+      result = MobilePass::FinishRegistration.call!(credential: registration_params,
                                                     username: session[:username],
                                                     challenge: session[:challenge])
 
@@ -18,7 +18,7 @@ module MobilePass
     end
 
     def authenticate
-      result = MobilePass::FinishAuthentication.call!(credential: credential_params,
+      result = MobilePass::FinishAuthentication.call!(credential: authentication_params,
                                                       challenge: session[:challenge])
 
       render json: { username: result.username, auth_token: result.auth_token }
@@ -35,12 +35,21 @@ module MobilePass
       params.permit(:username)
     end
 
-    def credential_params
-      params.require(:id, :rawId, :type, response: %i[attestationObject clientDataJSON])
+    def registration_params
+      params.require(%i[id rawId type response])
+      params.require(:response).require(%i[attestationObject clientDataJSON])
+      params.permit(:id, :rawId, :type, { response: %i[attestationObject clientDataJSON] })
+    end
+
+    def authentication_params
+      params.require(%i[id rawId type response])
+      params.require(:response).require(%i[authenticatorData clientDataJSON signature userHandle])
+      params.permit(:id, :rawId, :type, { response: %i[authenticatorData clientDataJSON signature userHandle] })
     end
 
     def refresh_params
       params.require(:auth_token)
+      params.permit(:auth_token)
     end
   end
 end

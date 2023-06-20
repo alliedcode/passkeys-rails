@@ -2,6 +2,7 @@ module MobilePass
   class ApplicationController < MobilePass.parent_controller.constantize
     rescue_from Error, with: :handle_mobile_pass_error
     rescue_from ::Interactor::Failure, with: :handle_interactor_failure
+    rescue_from ActionController::ParameterMissing, with: :handle_missing_parameter
 
     if respond_to?(:helper_method)
       helpers = %w[current_user authenticate_user!]
@@ -24,8 +25,12 @@ module MobilePass
       @validated_auth_token ||= ValidateAuthToken.call!(auth_token: headers['X-Auth'])
     end
 
-    def handle_interactor_failure(context)
-      raise Error.new(:authentication, context.to_h)
+    def handle_missing_parameter(error)
+      render json: Error.new(:authentication, { code: 'missing_parameter', message: error.message}).to_h, status: :unprocessable_entity
+    end
+
+    def handle_interactor_failure(failure)
+      render json: Error.new(:authentication, failure.context.to_h).to_h, status: :unprocessable_entity
     end
 
     def handle_mobile_pass_error(err)

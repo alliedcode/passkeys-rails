@@ -12,7 +12,8 @@ require 'rspec/rails'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 require "mobile_pass"
-require 'factory_bot'
+require 'factory_bot_rails'
+require 'debug'
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
@@ -49,8 +50,10 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  # Use our file manager as needed
+  # Include our helpers
   config.include FileManager
+  config.include Requests::JsonHelpers
+  config.include Requests::APIHelpers
 
   # infer FactoryBot as the base of :create & :build calls
   config.include FactoryBot::Syntax::Methods
