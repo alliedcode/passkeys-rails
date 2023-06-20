@@ -15,20 +15,7 @@ if ENV['CI'] == 'true'
   SimpleCov.formatter = SimpleCov::Formatter.codecov
 end
 
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
-
-ENV['RAILS_ENV'] = 'test'
-
-require_relative '../spec/dummy/config/environment'
-ENV['RAILS_ROOT'] ||= "#{File.dirname(__FILE__)}../../../spec/dummy"
-
-require "mobile_pass"
-require 'rspec/rails'
-
 RSpec.configure do |config|
-  config.include FileManager
-  config.infer_spec_type_from_file_location!
-
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
 

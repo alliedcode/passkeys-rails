@@ -1,13 +1,19 @@
 /.bundle/
-/.yardoc
-/_yardoc/
-/coverage/
 /doc/
+/log/*.log
 /pkg/
-/spec/reports/
 /tmp/
+/coverage/
+/spec/reports/
 
 # rspec failure tracking
 .rspec_status
+
 *.code-workspace
 .env
+
+/spec/dummy/db/*.sqlite3
+/spec/dummy/db/*.sqlite3-*
+/spec/dummy/log/*.log
+/spec/dummy/storage/
+/spec/dummy/tmp/

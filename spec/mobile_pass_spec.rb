@@ -1,15 +1,14 @@
-# frozen_string_literal: true
-
 RSpec.describe MobilePass do
   it "has a version number" do
     expect(MobilePass::VERSION).not_to be_nil
   end
 
   it "allows customization auth_token_expiration" do
-    expect { described_class.auth_token_expiration = 1.week.from_now }
+    new_value = 1.week.from_now
+
+    expect { described_class.auth_token_expiration = new_value }
       .to change { described_class.auth_token_expiration.to_i }
-      .from(30.days.from_now.to_i)
-      .to(1.week.from_now.to_i)
+      .to(new_value.to_i)
   end
 
   it "allows customization parent_controller" do

@@ -24,6 +24,7 @@ AllCops:
     - ./config.ru
     - ./node_modules/**/*
     - db/schema.rb
+    - spec/dummy/db/schema.rb
 
 Rails/UnknownEnv:
   Environments:
@@ -31,6 +32,9 @@ Rails/UnknownEnv:
     - staging
     - development
     - test
+
+Gemspec/DevelopmentDependencies:
+  Enabled: false
 
 Rails:
   Enabled: true
