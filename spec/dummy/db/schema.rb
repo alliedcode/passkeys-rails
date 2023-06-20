@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_20_012600) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_20_194014) do
   create_table "mobile_pass_agents", force: :cascade do |t|
     t.string "username", null: false
     t.string "authenticatable_type"
@@ -32,6 +32,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_012600) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["mobile_pass_agent_id"], name: "index_mobile_pass_passkeys_on_mobile_pass_agent_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "mobile_pass_passkeys", "mobile_pass_agents"
