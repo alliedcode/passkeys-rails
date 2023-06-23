@@ -10,16 +10,17 @@ module MobilePass
     end
 
     def register
-      result = MobilePass::FinishRegistration.call!(credential: registration_params,
-                                                    username: session[:username],
-                                                    challenge: session[:challenge])
+      result = MobilePass::FinishRegistration.call!(credential: attestation_credential_params.to_h,
+                                                    authenticatable_class:,
+                                                    username: session.dig(:mobile_pass, :username),
+                                                    challenge: session.dig(:mobile_pass, :challenge))
 
       render json: { username: result.username, auth_token: result.auth_token }
     end
 
     def authenticate
-      result = MobilePass::FinishAuthentication.call!(credential: authentication_params,
-                                                      challenge: session[:challenge])
+      result = MobilePass::FinishAuthentication.call!(credential: authentication_params.to_h,
+                                                      challenge: session.dig(:mobile_pass, :challenge))
 
       render json: { username: result.username, auth_token: result.auth_token }
     end
@@ -35,10 +36,15 @@ module MobilePass
       params.permit(:username)
     end
 
-    def registration_params
-      params.require(%i[id rawId type response])
-      params.require(:response).require(%i[attestationObject clientDataJSON])
-      params.permit(:id, :rawId, :type, { response: %i[attestationObject clientDataJSON] })
+    def attestation_credential_params
+      credential = params.require(:credential)
+      credential.require(%i[id rawId type response])
+      credential.require(:response).require(%i[attestationObject clientDataJSON])
+      credential.permit(:id, :rawId, :type, { response: %i[attestationObject clientDataJSON] })
+    end
+
+    def authenticatable_class
+      params[:authenticatable_class]
     end
 
     def authentication_params

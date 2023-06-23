@@ -28,10 +28,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_194014) do
     t.string "identifier"
     t.string "public_key"
     t.integer "sign_count"
-    t.integer "mobile_pass_agent_id", null: false
+    t.integer "agent_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["mobile_pass_agent_id"], name: "index_mobile_pass_passkeys_on_mobile_pass_agent_id"
+    t.index ["agent_id"], name: "index_mobile_pass_passkeys_on_agent_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -39,5 +39,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_194014) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "mobile_pass_passkeys", "mobile_pass_agents"
+  add_foreign_key "mobile_pass_passkeys", "mobile_pass_agents", column: "agent_id"
 end

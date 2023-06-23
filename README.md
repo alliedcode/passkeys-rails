@@ -2,7 +2,8 @@
 Short description and motivation.
 
 ## Usage
-How to use my plugin.
+rails mobile_pass::install
+MobilePass maintains an Agent model and related Passeys.  If you have a user model, add `include MobilePass::Authenticatable` to your model and include the name of that class (e.g. "User") in the authenticatable_class param when calling the passkeys/register API.
 
 ## Installation
 Add this line to your application's Gemfile:

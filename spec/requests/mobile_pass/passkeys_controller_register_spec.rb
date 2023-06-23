@@ -6,7 +6,7 @@ RSpec.describe MobilePass::PasskeysController do
   it_behaves_like 'an api that requires some params'
 
   context 'with required params' do
-    let(:required_params) { { id: '123', rawId: '123', type: 'hmm', response: auth_response } }
+    let(:required_params) { { credential: { id: '123', rawId: '123', type: 'hmm', response: auth_response } } }
     let(:auth_response) { { attestationObject: '123', clientDataJSON: '{}' } }
 
     # rubocop:disable RSpec/VerifiedDoubles

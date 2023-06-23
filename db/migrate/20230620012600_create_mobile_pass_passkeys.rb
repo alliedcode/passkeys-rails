@@ -4,7 +4,7 @@ class CreateMobilePassPasskeys < ActiveRecord::Migration[7.0]
       t.string :identifier
       t.string :public_key
       t.integer :sign_count
-      t.references :mobile_pass_agent, null: false, foreign_key: true
+      t.references :agent, null: false, foreign_key: { to_table: :mobile_pass_agents }
 
       t.timestamps
     end
