@@ -26,11 +26,11 @@ module MobilePass
     end
 
     def handle_missing_parameter(error)
-      render json: Error.new(:authentication, { code: 'missing_parameter', message: error.message}).to_h, status: :unprocessable_entity
+      render json: Error.new(:authentication, { code: 'missing_parameter', message: error.message }).to_h, status: :unprocessable_entity
     end
 
     def handle_interactor_failure(failure)
-      render json: Error.new(:authentication, failure.context.to_h).to_h, status: :unprocessable_entity
+      render json: Error.new(:authentication, failure.context.to_h.slice(:code, :message)).to_h, status: :unprocessable_entity
     end
 
     def handle_mobile_pass_error(err)

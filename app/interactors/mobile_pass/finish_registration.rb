@@ -17,6 +17,8 @@ module MobilePass
 
     def verify_credential!
       webauthn_credential.verify(challenge)
+    rescue StandardError => e
+      context.fail!(code: :webauthn_error, message: e.message)
     rescue WebAuthn::Error => e
       context.fail!(code: :webauthn_error, message: e.message)
     end

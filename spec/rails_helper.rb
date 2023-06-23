@@ -54,6 +54,7 @@ RSpec.configure do |config|
   config.include FileManager
   config.include Requests::JsonHelpers
   config.include Requests::APIHelpers
+  config.include Requests::WebauthnHelpers
 
   # infer FactoryBot as the base of :create & :build calls
   config.include FactoryBot::Syntax::Methods
