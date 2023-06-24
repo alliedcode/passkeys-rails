@@ -15,8 +15,7 @@ module MobilePass
     def create_unregistered_agent
       agent = Agent.create(username:, webauthn_identifier: WebAuthn.generate_user_id)
 
-      context.fail!(code: :validation_errors, message: "Username is already in use") if agent.blank?
-      context.fail!(code: :validation_errors, message: agent.errors.full_messages.to_sentence) unless agent.persisted?
+      context.fail!(code: :validation_errors, message: agent.errors.full_messages.to_sentence) unless agent.valid?
 
       agent
     end

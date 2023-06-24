@@ -22,6 +22,7 @@ module MobilePass
       )
 
       passkey.update!(sign_count: webauthn_credential.sign_count)
+      agent.update!(last_authenticated_at: Time.current)
     rescue WebAuthn::SignCountVerificationError
       # Cryptographic verification of the authenticator data succeeded, but the signature counter was less than or equal
       # to the stored value. This can have several reasons and depending on your risk tolerance you can choose to fail or
