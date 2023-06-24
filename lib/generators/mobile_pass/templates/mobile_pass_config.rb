@@ -1,12 +1,6 @@
 require 'mobile_pass'
 
 MobilePass.config do |c|
-  # The parent controller from which all MobilePass controllers inherit.
-  # Defaults to ApplicationController. This should be set early
-  # in the initialization process and should be set to a string.
-  # Default is ApplicationController
-  # c.parent_controller = "ApplicationController"
-
   # Secret used to encode the auth token.
   # Changing this value will invalidate all tokens that have been fetched
   # through the API.

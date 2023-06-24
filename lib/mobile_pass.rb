@@ -8,11 +8,6 @@ require "jwt"
 require "webauthn"
 
 module MobilePass
-  # The parent controller from which all MobilePass controllers inherit.
-  # Defaults to ApplicationController. This should be set early
-  # in the initialization process and should be set to a string.
-  mattr_accessor :parent_controller, default: "ApplicationController"
-
   # Secret used to encode the auth token.
   # Rails.application.secret_key_base is used if none is defined here.
   # Changing this value will invalidate all tokens that have been fetched

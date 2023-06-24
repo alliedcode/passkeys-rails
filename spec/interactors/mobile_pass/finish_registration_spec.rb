@@ -5,12 +5,24 @@ RSpec.describe MobilePass::FinishRegistration do
     let(:authenticatable_class) { nil }
     let(:credential) { nil }
     let(:username) { nil }
-    let(:challenge) { nil }
+    let(:original_challenge) { "CHALLENGE" }
+
+    context "when the credential doesn't verify" do
+      it "fails with an appropriate message" do
+        attestation_credential = instance_double(WebAuthn::PublicKeyCredentialWithAttestation, id: 'id', public_key: 'pk', sign_count: 0)
+        allow(WebAuthn::Credential).to receive(:from_create).with(credential).and_return(attestation_credential)
+        allow(attestation_credential).to receive(:verify).with(original_challenge).and_raise(WebAuthn::Error.new)
+
+        result = call
+        expect(result).to be_failure
+        expect(result.code).to eq :webauthn_error
+        expect(result.message).to eq "WebAuthn::Error"
+      end
+    end
 
     context "when the credential and challenge are valid" do
       let(:credential) { { id: '123', rawId: '123', type: 'hmm', response: auth_response } }
       let(:auth_response) { { attestationObject: '123', clientDataJSON: '{}' } }
-      let(:original_challenge) { "CHALLENGE" }
 
       before do
         attestation_credential = instance_double(WebAuthn::PublicKeyCredentialWithAttestation, id: 'id', public_key: 'pk', sign_count: 0)
@@ -37,6 +49,17 @@ RSpec.describe MobilePass::FinishRegistration do
           end
         end
 
+        context "when there is already a passkey with the given identifier" do
+          before { create(:passkey, identifier: 'id') }
+
+          it "fails with an appropriate message" do
+            result = call
+            expect(result).to be_failure
+            expect(result.code).to eq :passkey_error
+            expect(result.message).to match(/Validation failed:/)
+          end
+        end
+
         context "when the authenticatable_class is a valid class" do
           let(:authenticatable_class) { "User" }
 
@@ -54,15 +77,15 @@ RSpec.describe MobilePass::FinishRegistration do
           end
         end
 
-        context "when the authenticatable_class matches a class that doesn't meet the requirements" do
-          let(:authenticatable_class) { "MobilePass::Passkey" }
+        context "when the authenticatable_class matches a class that doesn't pass validation when created" do
+          let(:authenticatable_class) { "Contact" }
 
           it "fails with an appropriate message" do
             expect {
               result = call
               expect(result).to be_failure
-              expect(result.code).to eq :invalid_authenticatable_class
-              expect(result.message).to eq "authenticatable_class (#{authenticatable_class}) must respond to did_register(Agent)"
+              expect(result.code).to eq :record_invalid
+              expect(result.message).to match(/Validation failed:/)
             }
             .to not_change { agent.reload }
           end

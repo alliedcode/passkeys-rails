@@ -5,6 +5,8 @@ module MobilePass
     delegate :auth_token, to: :context
 
     def call
+      context.fail!(code: :missing_token, message: "X-Auth header is required") if auth_token.blank?
+
       context.agent = fetch_agent
     end
 

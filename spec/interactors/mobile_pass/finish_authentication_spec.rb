@@ -28,6 +28,27 @@ RSpec.describe MobilePass::FinishAuthentication do
           }
           .to change { passkey.reload.agent.last_authenticated_at }
         end
+
+        context "when the passkey has invalid data" do
+          let(:credential) { { id: '123', rawId: '123', type: 'hmm', response: auth_response } }
+          let(:auth_response) { { attestationObject: '123', clientDataJSON: '{}' } }
+          let(:original_challenge) { "CHALLENGE" }
+
+          before do
+            assertion_credential = instance_double(WebAuthn::PublicKeyCredentialWithAssertion, id: passkey.identifier, sign_count: passkey.sign_count)
+            allow(WebAuthn::Credential).to receive(:from_get).with(credential).and_return(assertion_credential)
+            allow(assertion_credential).to receive(:verify)
+                                       .with(original_challenge, public_key: passkey.public_key, sign_count: passkey.sign_count)
+                                       .and_raise(WebAuthn::Error.new)
+          end
+
+          it "returns an appropriate error" do
+            result = call
+            expect(result).to be_failure
+            expect(result.code).to eq :webauthn_error
+            expect(result.message).to eq "WebAuthn::Error"
+          end
+        end
       end
     end
 
@@ -40,7 +61,6 @@ RSpec.describe MobilePass::FinishAuthentication do
         before do
           assertion_credential = instance_double(WebAuthn::PublicKeyCredentialWithAssertion, id: 'hmm', sign_count: 0)
           allow(WebAuthn::Credential).to receive(:from_get).with(credential).and_return(assertion_credential)
-          # allow(assertion_credential).to receive(:verify).with(original_challenge, public_key: passkey.public_key, sign_count: passkey.sign_count)
         end
 
         it "returns an appropriate error" do

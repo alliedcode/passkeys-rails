@@ -45,8 +45,9 @@ module Requests
       let(:params) { required_params.merge(optional_params).to_json }
       let(:optional_params) { {} }
       let(:required_params) { {} }
+      let(:additional_headers) { {} }
 
-      let(:headers) { { 'Content-Type': 'application/json' } }
+      let(:headers) { { 'Content-Type': 'application/json' }.merge(additional_headers) }
     end
 
     RSpec.shared_examples 'an api that requires some params' do

@@ -6,12 +6,11 @@ module MobilePass
 
     included do
       has_one :agent, as: :authenticatable
-      def registered?
-        registred_at.present?
-      end
 
-      def self.did_register(agent)
-        agent.update!(authenticatable: create!)
+      delegate :registered?, to: :agent, allow_nil: true
+
+      def registering_with(_agent)
+        # initialize required attributes
       end
     end
   end

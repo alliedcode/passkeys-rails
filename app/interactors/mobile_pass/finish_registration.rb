@@ -49,12 +49,14 @@ module MobilePass
         context.fail!(code: :invalid_authenticatable_class, message: "authenticatable_class (#{authenticatable_class}) is not defined")
       end
 
-      unless klass.respond_to?(:did_register)
-        context.fail!(code: :invalid_authenticatable_class,
-                      message: "authenticatable_class (#{authenticatable_class}) must respond to did_register(Agent)")
+      begin
+        authenticatable = klass.create! { |obj|
+          obj.registering_with(agent) if obj.respond_to?(:registering_with)
+        }
+        agent.update!(authenticatable:)
+      rescue ActiveRecord::RecordInvalid => e
+        context.fail!(code: :record_invalid, message: e.message)
       end
-
-      klass.did_register agent
     end
 
     def webauthn_credential
