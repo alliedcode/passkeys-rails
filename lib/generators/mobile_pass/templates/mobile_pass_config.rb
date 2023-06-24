@@ -23,5 +23,5 @@ MobilePass.config do |c|
   # How long the auth token is valid before requiring a refresh or new login.
   # Set it to 0 for no expiration (not recommended in production).
   # Default is 30 days
-  # c.auth_token_expiration = 30.days.from_now
+  # c.auth_token_expires_in = 30.days
 end

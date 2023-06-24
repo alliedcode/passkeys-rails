@@ -256,6 +256,7 @@ GEM
       sprockets (>= 3.0.0)
     sqlite3 (1.6.3-arm64-darwin)
     thor (1.2.2)
+    timecop (0.9.6)
     timeout (0.3.2)
     tpm-key_attestation (0.12.0)
       bindata (~> 2.4)
@@ -300,6 +301,7 @@ DEPENDENCIES
   simplecov (~> 0.22.0)
   sprockets-rails
   sqlite3 (~> 1.6.3)
+  timecop (~> 0.9.6)
   tzinfo-data
 
 BUNDLED WITH

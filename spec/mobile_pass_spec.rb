@@ -1,14 +1,24 @@
 RSpec.describe MobilePass do
+  after {
+    # Restore defaults so other specs aren't affected
+    MobilePass.config do |c|
+      c.parent_controller = "ApplicationController"
+      c.auth_token_secret = Rails.application.secret_key_base
+      c.auth_token_algorithm = "HS256"
+      c.auth_token_expires_in = 30.days
+    end
+  }
+
   it "has a version number" do
     expect(MobilePass::VERSION).not_to be_nil
   end
 
-  it "allows customization auth_token_expiration" do
-    new_value = 1.week.from_now
+  it "allows customization auth_token_expires_in" do
+    new_value = 1.week
 
-    expect { described_class.auth_token_expiration = new_value }
-      .to change { described_class.auth_token_expiration.to_i }
-      .to(new_value.to_i)
+    expect { described_class.auth_token_expires_in = new_value }
+      .to change { described_class.auth_token_expires_in }
+      .to(new_value)
   end
 
   it "allows customization parent_controller" do

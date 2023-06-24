@@ -26,7 +26,7 @@ module MobilePass
 
   # How long the auth token is valid before requiring a refresh or new login.
   # Set it to 0 for no expiration (not recommended in production).
-  mattr_accessor :auth_token_expiration, default: 30.days.from_now
+  mattr_accessor :auth_token_expires_in, default: 30.days
 
   class << self
     def config

@@ -11,6 +11,8 @@ module MobilePass
 
       context.response = options
       context.session_data = session_data(options)
+    rescue Interactor::Failure => e
+      context.fail! code: e.context.code, message: e.context.message
     end
 
     private

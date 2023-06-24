@@ -15,6 +15,7 @@ RSpec.describe MobilePass::GenerateAuthToken do
 
       expect(payload['agent_id']).to eq agent.id
       expect(payload['exp']).to be_present
+      expect(Time.zone.at(payload['exp'])).to be_future
     end
   end
 end

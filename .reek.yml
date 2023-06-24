@@ -13,6 +13,6 @@ detectors:
   Attribute:
     exclude:
     - MobilePass#auth_token_algorithm
-    - MobilePass#auth_token_expiration
+    - MobilePass#auth_token_expires_in
     - MobilePass#auth_token_secret
     - MobilePass#parent_controller

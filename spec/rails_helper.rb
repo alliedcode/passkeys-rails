@@ -14,6 +14,7 @@ require 'rspec/rails'
 require "mobile_pass"
 require 'factory_bot_rails'
 require 'debug'
+require 'timecop'
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
@@ -32,12 +33,6 @@ RSpec::Matchers.define_negated_matcher :not_have_enqueued_job, :have_enqueued_jo
 ActiveJob::Base.queue_adapter = :test
 
 RSpec.configure do |config|
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  # config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
   config.use_transactional_fixtures = true
 
   config.mock_with :rspec

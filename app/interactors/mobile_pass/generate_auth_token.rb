@@ -17,7 +17,7 @@ module MobilePass
     end
 
     def jwt_payload
-      expiration = MobilePass.auth_token_expiration.to_i
+      expiration = (Time.current + MobilePass.auth_token_expires_in).to_i
 
       payload = { agent_id: agent.id }
       payload[:exp] = expiration unless expiration.zero?
