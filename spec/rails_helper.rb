@@ -15,6 +15,7 @@ require "mobile_pass"
 require 'factory_bot_rails'
 require 'debug'
 require 'timecop'
+require 'generator_spec'
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
@@ -46,7 +47,6 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   # Include our helpers
-  config.include FileManager
   config.include Requests::JsonHelpers
   config.include Requests::APIHelpers
   config.include Requests::WebauthnHelpers

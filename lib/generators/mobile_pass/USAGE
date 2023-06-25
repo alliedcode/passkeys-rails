@@ -1,8 +1,10 @@
 Description:
-    Explain the generator
+    Creates a MobilePass config file, updates the routes and adds migrations.
 
 Example:
-    bin/rails generate install Thing
+    bin/rails generate mobile_pass:install
 
-    This will create:
-        what/will/it/create
+    This will:
+        create config/mobile_pass.rb
+        add database migrations
+        update routes to mount the mobile_pass engine
