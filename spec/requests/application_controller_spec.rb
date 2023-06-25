@@ -24,7 +24,7 @@ RSpec.describe ApplicationController do
 
   context "with a valid auth token" do
     let(:agent) { create(:agent) }
-    let(:additional_headers) { { 'X-Auth' => MobilePass::GenerateAuthToken.call(agent:).auth_token } }
+    let(:additional_headers) { { 'X-Auth' => PasskeysRails::GenerateAuthToken.call(agent:).auth_token } }
 
     context 'when visiting the index page' do
       it "renders the username" do

@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :agent, class: "MobilePass::Agent" do
+  factory :agent, class: "PasskeysRails::Agent" do
     sequence(:username) { |n| "username-#{n}" }
     registered_at { nil }
     last_authenticated_at { nil }

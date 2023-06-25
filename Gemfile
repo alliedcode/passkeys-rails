@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-# Specify your gem's dependencies in mobile_pass.gemspec.
+# Specify your gem's dependencies in passkeys_rails.gemspec.
 gemspec
 
 # other development dependencies

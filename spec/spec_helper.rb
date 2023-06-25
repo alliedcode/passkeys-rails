@@ -6,8 +6,8 @@ require 'simplecov'
 SimpleCov.start 'rails' do
   add_filter 'spec/'
   add_filter '.github/'
-  add_filter 'lib/generators/mobile_pass/templates/'
-  add_filter 'lib/mobile_pass/version'
+  add_filter 'lib/generators/passkeys_rails/templates/'
+  add_filter 'lib/passkeys_rails/version'
 end
 
 if ENV['CI'] == 'true'

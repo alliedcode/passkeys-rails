@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mobile_pass (0.1.0)
+    passkeys-rails (0.1.0)
       interactor (~> 3.1.2)
       jwt (~> 2.7.1)
       rails (>= 7.0.5)
@@ -257,7 +257,7 @@ GEM
     sqlite3 (1.6.3-arm64-darwin)
     thor (1.2.2)
     timecop (0.9.6)
-    timeout (0.3.2)
+    timeout (0.4.0)
     tpm-key_attestation (0.12.0)
       bindata (~> 2.4)
       openssl (> 2.0)
@@ -288,7 +288,7 @@ DEPENDENCIES
   dotenv (~> 2.8.1)
   factory_bot_rails (~> 6.2.0)
   generator_spec (~> 0.9.4)
-  mobile_pass!
+  passkeys-rails!
   puma (~> 5.6.5)
   rake (~> 13.0)
   reek (~> 6.1.4)

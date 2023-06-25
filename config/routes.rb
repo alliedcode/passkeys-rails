@@ -1,4 +1,4 @@
-MobilePass::Engine.routes.draw do
+PasskeysRails::Engine.routes.draw do
   post 'passkeys/challenge'
   post 'passkeys/register'
   post 'passkeys/authenticate'

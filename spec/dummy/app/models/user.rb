@@ -1,3 +1,3 @@
 class User < ApplicationRecord
-  include MobilePass::Authenticatable
+  include PasskeysRails::Authenticatable
 end

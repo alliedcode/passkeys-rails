@@ -1,15 +1,15 @@
-# MobilePass
+# PasskeysRails
 Short description and motivation.
 
 ## Usage
-rails mobile_pass::install
-MobilePass maintains an Agent model and related Passeys.  If you have a user model, add `include MobilePass::Authenticatable` to your model and include the name of that class (e.g. "User") in the authenticatable_class param when calling the passkeys/register API.
+rails passkeys-rails::install
+PasskeysRails maintains an Agent model and related Passeys.  If you have a user model, add `include PasskeysRails::Authenticatable` to your model and include the name of that class (e.g. "User") in the authenticatable_class param when calling the register API.
 
 ## Installation
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "mobile_pass"
+gem "passkeys_rails"
 ```
 
 And then execute:
@@ -19,7 +19,7 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install mobile_pass
+$ gem install passkeys_rails
 ```
 
 ## Contributing

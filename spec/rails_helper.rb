@@ -11,7 +11,7 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'rspec/rails'
 
 # Add additional requires below this line. Rails is not loaded until this point!
-require "mobile_pass"
+require "passkeys_rails"
 require 'factory_bot_rails'
 require 'debug'
 require 'timecop'
