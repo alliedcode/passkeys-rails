@@ -6,11 +6,12 @@ RSpec.describe PasskeysRails::BeginChallenge do
 
     context "without a username" do
       it "calls BeginAuthentication and returns the challenge, and options" do
-        options = OpenStruct.new(challenge: "CHALLENGE")
+        options = instance_double(WebAuthn::PublicKeyCredential::RequestOptions, challenge: "CHALLENGE")
+        context = Interactor::Context.build(options:)
 
         allow(PasskeysRails::BeginAuthentication)
           .to receive(:call!)
-          .and_return(OpenStruct.new(options:))
+          .and_return(context)
           .exactly(1).time
 
         allow(WebAuthn).to receive_message_chain(:standard_encoder, :encode).with("CHALLENGE").and_return("ENCODED CHALLENGE")
@@ -28,11 +29,12 @@ RSpec.describe PasskeysRails::BeginChallenge do
 
       it "calls BeginRegistration and returns the username, challenge, and options" do
         options = OpenStruct.new(challenge: "CHALLENGE")
+        context = Interactor::Context.build(options:)
 
         allow(PasskeysRails::BeginRegistration)
           .to receive(:call!)
           .with(username:)
-          .and_return(OpenStruct.new(options:))
+          .and_return(context)
           .exactly(1).time
 
         allow(WebAuthn).to receive_message_chain(:standard_encoder, :encode).with("CHALLENGE").and_return("ENCODED CHALLENGE")

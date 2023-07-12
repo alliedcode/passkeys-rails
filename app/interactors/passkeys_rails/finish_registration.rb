@@ -19,8 +19,10 @@ module PasskeysRails
 
     def verify_credential!
       webauthn_credential.verify(challenge)
-    rescue StandardError, WebAuthn::Error => e
+    rescue WebAuthn::Error => e
       context.fail!(code: :webauthn_error, message: e.message)
+    rescue StandardError => e
+      context.fail!(code: :error, message: e.message)
     end
 
     def store_passkey_and_register_agent!
@@ -45,7 +47,7 @@ module PasskeysRails
     def create_authenticatable!
       klass = begin
         authenticatable_class.constantize
-      rescue StandardError => e
+      rescue StandardError
         context.fail!(code: :invalid_authenticatable_class, message: "authenticatable_class (#{authenticatable_class}) is not defined")
       end
 
