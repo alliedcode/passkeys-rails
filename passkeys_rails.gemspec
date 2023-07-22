@@ -53,6 +53,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "~> 1.21"
   spec.add_development_dependency 'rubocop-performance', "~> 1.18.0"
   spec.add_development_dependency "rubocop-rails", "~> 2.20.2"
+  spec.add_development_dependency 'rubocop-rake', "~> 0.6.0"
   spec.add_development_dependency 'rubocop-rspec', "~> 2.22.0"
 end
 # rubocop:enable Metrics/BlockLength

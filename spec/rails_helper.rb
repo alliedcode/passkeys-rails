@@ -11,11 +11,8 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'rspec/rails'
 
 # Add additional requires below this line. Rails is not loaded until this point!
-require "passkeys_rails"
-require 'factory_bot_rails'
-require 'debug'
-require 'timecop'
-require 'generator_spec'
+require 'bundler'
+Bundler.require :default, :development
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
