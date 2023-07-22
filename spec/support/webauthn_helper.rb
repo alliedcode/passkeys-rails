@@ -57,16 +57,5 @@ module Requests
 
       [create_result["id"], credential_public_key, response.authenticator_data.sign_count]
     end
-
-    def fake_cose_credential_key(algorithm: -7, x_coordinate: nil, y_coordinate: nil)
-      crv_p256 = 1
-
-      COSE::Key::EC2.new(
-        alg: algorithm,
-        crv: crv_p256,
-        x: x_coordinate || SecureRandom.random_bytes(32),
-        y: y_coordinate || SecureRandom.random_bytes(32)
-      ).serialize
-    end
   end
 end

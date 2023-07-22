@@ -1,7 +1,7 @@
 RSpec.describe PasskeysRails do
   after {
     # Restore defaults so other specs aren't affected
-    PasskeysRails.config do |c|
+    described_class.config do |c|
       c.auth_token_secret = Rails.application.secret_key_base
       c.auth_token_algorithm = "HS256"
       c.auth_token_expires_in = 30.days

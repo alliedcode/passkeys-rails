@@ -1,7 +1,7 @@
 RSpec.describe PasskeysRails::PasskeysController do
   let(:call_api) { post '/passkeys_rails/passkeys/authenticate', params:, headers: }
 
-  include_context 'params'
+  include_context 'with api params'
 
   it_behaves_like 'an api that requires some params'
 

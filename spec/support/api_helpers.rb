@@ -41,7 +41,7 @@ module Requests
       fields
     end
 
-    RSpec.shared_context 'params' do
+    RSpec.shared_context 'with api params' do
       let(:params) { required_params.merge(optional_params).to_json }
       let(:optional_params) { {} }
       let(:required_params) { {} }

@@ -1,7 +1,7 @@
 RSpec.describe PasskeysRails::PasskeysController do
   let(:call_api) { post '/passkeys_rails/passkeys/challenge', params:, headers: }
 
-  include_context 'params'
+  include_context 'with api params'
 
   context 'with no params' do
     it 'begins the login process and returns the passkey challenge fields' do

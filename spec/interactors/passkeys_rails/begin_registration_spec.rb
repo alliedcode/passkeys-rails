@@ -6,7 +6,7 @@ RSpec.describe PasskeysRails::BeginRegistration do
 
     context "when there are no Agents with the username" do
       it "creates a new agent and returns webauthn credential options" do
-        options = OpenStruct.new(challenge: "CHALLENGE")
+        options = instance_double(WebAuthn::PublicKeyCredential::CreationOptions, challenge: "CHALLENGE")
         user_identifier = "SOME ID"
 
         allow(WebAuthn).to receive(:generate_user_id).and_return(user_identifier)

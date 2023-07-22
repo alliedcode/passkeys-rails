@@ -2,7 +2,7 @@ RSpec.describe ApplicationController do
   let(:get_index) { get '/', params:, headers: }
   let(:get_home) { get '/home', params:, headers: }
 
-  include_context 'params'
+  include_context 'with api params'
 
   context "without an auth token" do
     context 'when visiting the index page' do

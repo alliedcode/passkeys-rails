@@ -1,6 +1,12 @@
 RSpec.describe PasskeysRails::BeginChallenge do
   let(:call) { described_class.call username: }
 
+  def stub_webauthn(challenge:, encoded_response:)
+    standard_encoder = instance_double(WebAuthn::Encoder)
+    allow(WebAuthn).to receive(:standard_encoder).and_return(standard_encoder)
+    allow(standard_encoder).to receive(:encode).with(challenge).and_return(encoded_response)
+  end
+
   context "with all parameters" do
     let(:username) { nil }
 
@@ -14,7 +20,7 @@ RSpec.describe PasskeysRails::BeginChallenge do
           .and_return(context)
           .exactly(1).time
 
-        allow(WebAuthn).to receive_message_chain(:standard_encoder, :encode).with("CHALLENGE").and_return("ENCODED CHALLENGE")
+        stub_webauthn(challenge: "CHALLENGE", encoded_response: "ENCODED CHALLENGE")
 
         result = call
         expect(result).to be_success
@@ -37,7 +43,7 @@ RSpec.describe PasskeysRails::BeginChallenge do
           .and_return(context)
           .exactly(1).time
 
-        allow(WebAuthn).to receive_message_chain(:standard_encoder, :encode).with("CHALLENGE").and_return("ENCODED CHALLENGE")
+        stub_webauthn(challenge: "CHALLENGE", encoded_response: "ENCODED CHALLENGE")
 
         result = call
         expect(result).to be_success
