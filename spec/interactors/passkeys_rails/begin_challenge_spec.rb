@@ -28,7 +28,7 @@ RSpec.describe PasskeysRails::BeginChallenge do
       let(:username) { "alice" }
 
       it "calls BeginRegistration and returns the username, challenge, and options" do
-        options = OpenStruct.new(challenge: "CHALLENGE")
+        options = instance_double(WebAuthn::PublicKeyCredential::CreationOptions, challenge: "CHALLENGE")
         context = Interactor::Context.build(options:)
 
         allow(PasskeysRails::BeginRegistration)
