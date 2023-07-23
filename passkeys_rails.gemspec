@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "dotenv", "~> 2.8.1"
   spec.add_development_dependency "puma", "~> 5.6.5"
   spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "sprockets-rails", "~> 4.2.0"
+  spec.add_development_dependency "sprockets-rails", "~> 3.4.2"
   spec.add_development_dependency "sqlite3", "~> 1.6.3"
 
   spec.add_development_dependency "codecov", "~> 0.2.12"

@@ -4,7 +4,7 @@ PATH
     passkeys-rails (0.1.0)
       interactor (~> 3.1.2)
       jwt (~> 2.7.1)
-      rails (>= 7.0.5)
+      rails (~> 7.0, >= 7.0.5)
       webauthn (~> 3.0.0)
 
 GEM
@@ -306,7 +306,7 @@ DEPENDENCIES
   rubocop-rake (~> 0.6.0)
   rubocop-rspec (~> 2.22.0)
   simplecov (~> 0.22.0)
-  sprockets-rails
+  sprockets-rails (~> 3.4.2)
   sqlite3 (~> 1.6.3)
   timecop (~> 0.9.6)
   tzinfo-data
