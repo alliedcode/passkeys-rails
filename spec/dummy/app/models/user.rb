@@ -1,3 +1,3 @@
 class User < ApplicationRecord
-  include PasskeysRails::Authenticatable
+  include Passkeys::Rails::Authenticatable
 end

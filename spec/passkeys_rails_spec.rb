@@ -1,4 +1,4 @@
-RSpec.describe PasskeysRails do
+RSpec.describe Passkeys::Rails do
   after {
     # Restore defaults so other specs aren't affected
     described_class.config do |c|
@@ -9,7 +9,7 @@ RSpec.describe PasskeysRails do
   }
 
   it "has a version number" do
-    expect(PasskeysRails::VERSION).not_to be_nil
+    expect(Passkeys::Rails::VERSION).not_to be_nil
   end
 
   it "allows customization auth_token_expires_in" do

@@ -1,9 +1,9 @@
-require_relative "lib/passkeys_rails/version"
+require_relative "lib/passkeys/rails/version"
 
 # rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |spec|
   spec.name        = "passkeys-rails"
-  spec.version     = PasskeysRails::VERSION
+  spec.version     = Passkeys::Rails::VERSION
   spec.authors     = ["Troy Anderson"]
   spec.email       = ["troy@alliedcode.com"]
   spec.homepage    = "https://github.com/alliedcode/passkeys-rails"

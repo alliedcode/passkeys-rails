@@ -1,4 +1,4 @@
-PasskeysRails::Engine.routes.draw do
+Passkeys::Rails::Engine.routes.draw do
   post 'passkeys/challenge'
   post 'passkeys/register'
   post 'passkeys/authenticate'
