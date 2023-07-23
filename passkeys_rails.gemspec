@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.email       = ["troy@alliedcode.com"]
   spec.homepage    = "https://github.com/alliedcode/passkeys-rails"
   spec.summary     = "PassKey authentication back end with simple API"
-  spec.description = "Devise is awesome, but we don't need all that UI/UX for PassKeys.  This gem is to make it easy to provide a back end that authenticates a mobile front end with PassKeys."
+  spec.description = "Devise is awesome, but we don't need all that UI/UX for PassKeys. This gem is to make it easy to provide a back end that authenticates a mobile front end with PassKeys."
   spec.license     = "MIT"
   spec.required_ruby_version = ">= 3.1"
 
