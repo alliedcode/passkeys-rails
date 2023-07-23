@@ -1,3 +1,8 @@
+### 0.1.3
+
+* More restructuring and fixed issue where autoloading failed
+  during client app initialization.
+
 ### 0.1.2
 
 * Restructured lib directory.

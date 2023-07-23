@@ -1,7 +1,5 @@
-module Passkeys
-  module Rails
-    class ApplicationRecord < ActiveRecord::Base
-      self.abstract_class = true
-    end
+module Passkeys::Rails
+  class ApplicationRecord < ActiveRecord::Base
+    self.abstract_class = true
   end
 end

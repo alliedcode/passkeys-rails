@@ -1,18 +1,16 @@
 require 'active_support/concern'
 
-module Passkeys
-  module Rails
-    module Authenticatable
-      extend ActiveSupport::Concern
+module Passkeys::Rails
+  module Authenticatable
+    extend ActiveSupport::Concern
 
-      included do
-        has_one :agent, as: :authenticatable
+    included do
+      has_one :agent, as: :authenticatable
 
-        delegate :registered?, to: :agent, allow_nil: true
+      delegate :registered?, to: :agent, allow_nil: true
 
-        def registering_with(_agent)
-          # initialize required attributes
-        end
+      def registering_with(_agent)
+        # initialize required attributes
       end
     end
   end

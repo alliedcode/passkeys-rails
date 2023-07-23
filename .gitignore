@@ -18,3 +18,4 @@
 /spec/dummy/storage/
 /spec/dummy/tmp/
 *.gem
+.yardoc
