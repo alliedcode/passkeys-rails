@@ -1,4 +1,6 @@
 require_relative 'error_middleware'
+require_relative 'controllers/helpers'
+
 module PasskeysRails
   class Engine < ::Rails::Engine
     isolate_namespace PasskeysRails
@@ -11,9 +13,11 @@ module PasskeysRails
       g.helper false
     end
 
-    config.to_prepare do
-      # include our helper methods in the host application's ApplicationController
-      ::ApplicationController.include ApplicationHelper
+    # Include helpers
+    initializer "passkeys_rails.url_helpers" do
+      ActiveSupport.on_load(:action_controller) do
+        include PasskeysRails::Controllers::Helpers
+      end
     end
 
     # provide a way to bail out of the render flow if needed
