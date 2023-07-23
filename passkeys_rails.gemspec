@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   end
 
-  spec.add_dependency "rails", ">= 7.0.5"
+  spec.add_runtime_dependency 'rails', '~> 7.0', '>= 7.0.5'
 
   spec.add_dependency "interactor", "~> 3.1.2"
   spec.add_dependency "jwt", "~> 2.7.1"
@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "dotenv", "~> 2.8.1"
   spec.add_development_dependency "puma", "~> 5.6.5"
   spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "sprockets-rails"
+  spec.add_development_dependency "sprockets-rails", "~> 4.2.0"
   spec.add_development_dependency "sqlite3", "~> 1.6.3"
 
   spec.add_development_dependency "codecov", "~> 0.2.12"
