@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_action :authenticate!, only: :index
+  before_action :authenticate_passkey!, only: :index
 
   def index
     render json: { username: current_agent&.username }

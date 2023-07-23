@@ -1,5 +1,13 @@
 require_relative 'error_middleware'
 require_relative 'controllers/helpers'
+require_relative "interactors/begin_authentication"
+require_relative "interactors/begin_challenge"
+require_relative "interactors/begin_registration"
+require_relative "interactors/finish_authentication"
+require_relative "interactors/finish_registration"
+require_relative "interactors/generate_auth_token"
+require_relative "interactors/refresh_token"
+require_relative "interactors/validate_auth_token"
 
 module PasskeysRails
   class Engine < ::Rails::Engine
@@ -14,8 +22,12 @@ module PasskeysRails
     end
 
     # Include helpers
-    initializer "passkeys_rails.url_helpers" do
-      ActiveSupport.on_load(:action_controller) do
+    initializer "passkeys_rails.helpers" do
+      ActiveSupport.on_load(:action_controller_base) do
+        include PasskeysRails::Controllers::Helpers
+      end
+
+      ActiveSupport.on_load(:action_controller_api) do
         include PasskeysRails::Controllers::Helpers
       end
     end

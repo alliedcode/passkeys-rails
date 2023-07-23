@@ -1,4 +1,4 @@
-require 'passkeys_rails'
+require 'passkeys-rails'
 
 PasskeysRails.config do |c|
   # Secret used to encode the auth token.

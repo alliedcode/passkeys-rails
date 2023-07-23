@@ -26,6 +26,20 @@ Or install it yourself as:
 $ gem install passkeys_rails
 ```
 
+Depending on your application's configuration some manual setup may be required:
+
+  1. Add a before_action to all controllers that require authentication to use.
+
+     For example:
+
+        before_action :authenticate_passkey!, except: [:index]
+
+  2. Optionally include PasskeysRails::Authenticatable to the model(s) you are using as
+     your user model(s).  For example, the User model.
+
+  3. See the reference mobile applications for how to use passkeys-rails for passkey
+     authentication.
+
 ## Contributing
 Contribution directions go here.
 

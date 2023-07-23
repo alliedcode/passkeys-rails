@@ -1,4 +1,4 @@
-require 'passkeys_rails'
+require 'passkeys-rails'
 require 'rails'
 
 module PasskeysRails

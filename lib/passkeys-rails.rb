@@ -1,5 +1,4 @@
 require_relative "passkeys_rails/version"
-require_relative "passkeys_rails/engine"
 require_relative "generators/passkeys_rails/install_generator"
 require "rails"
 require "active_support/core_ext/numeric/time"
@@ -7,6 +6,7 @@ require "active_support/dependencies"
 require "interactor"
 require "jwt"
 require "webauthn"
+require_relative "passkeys_rails/engine"
 
 module PasskeysRails
   # Secret used to encode the auth token.
