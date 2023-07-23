@@ -1,3 +1,20 @@
 language: ruby
 rvm:
  - 3.2.1
+
+env:
+ - DB=sqlite
+ - DB=mysql
+ - DB=postgresql
+
+before_script:
+ - rake app:db:create
+ - rake app:db:migrate
+ - rake app:db:test:prepare
+
+after_script:
+ - rake app:de:rollback
+
+branches:
+ only:
+  - main
