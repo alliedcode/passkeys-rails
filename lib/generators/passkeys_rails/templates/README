@@ -8,7 +8,7 @@ Depending on your application's configuration some manual setup may be required:
 
         before_action :authenticate_passkey!, except: [:index]
 
-  2. Optionally include Passkeys::Rails::Authenticatable to the model(s) you are using as
+  2. Optionally include PasskeysRails::Authenticatable to the model(s) you are using as
      your user model(s).  For example, the User model.
 
   3. See the reference mobile applications for how to use passkeys-rails for passkey

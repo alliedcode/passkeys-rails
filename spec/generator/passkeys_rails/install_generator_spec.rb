@@ -1,6 +1,6 @@
 require 'generators/passkeys_rails/install_generator'
 
-RSpec.describe Passkeys::Rails::Generators::InstallGenerator do
+RSpec.describe PasskeysRails::Generators::InstallGenerator do
   destination Rails.root.join('tmp')
 
   def create_temporary_routes_file
@@ -26,11 +26,11 @@ RSpec.describe Passkeys::Rails::Generators::InstallGenerator do
       directory "config" do
         directory "initializers" do
           file "passkeys_rails.rb" do
-            contains 'Passkeys::Rails.config do |c|'
+            contains 'PasskeysRails.config do |c|'
           end
         end
         file 'routes.rb' do
-          contains 'mount Passkeys::Rails::Engine => "/passkeys_rails"'
+          contains 'mount PasskeysRails::Engine => "/passkeys_rails"'
         end
       end
     }

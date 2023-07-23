@@ -26,6 +26,7 @@ AllCops:
     - db/schema.rb
     - spec/dummy/db/schema.rb
     - "*.gemspec"
+    - rails/*
 
 Rails/UnknownEnv:
   Environments:

@@ -1,6 +1,6 @@
 require 'passkeys-rails'
 
-Passkeys::Rails.config do |c|
+PasskeysRails.config do |c|
   # Secret used to encode the auth token.
   # Changing this value will invalidate all tokens that have been fetched
   # through the API.

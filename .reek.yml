@@ -12,6 +12,6 @@ detectors:
 
   Attribute:
     exclude:
-    - Passkeys::Rails#auth_token_algorithm
-    - Passkeys::Rails#auth_token_expires_in
-    - Passkeys::Rails#auth_token_secret
+    - PasskeysRails#auth_token_algorithm
+    - PasskeysRails#auth_token_expires_in
+    - PasskeysRails#auth_token_secret

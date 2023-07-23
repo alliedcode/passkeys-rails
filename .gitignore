@@ -19,3 +19,4 @@
 /spec/dummy/tmp/
 *.gem
 .yardoc
+rails

@@ -1,5 +1,5 @@
 Description:
-    Creates a Passkeys::Rails config file, updates the routes and adds migrations.
+    Creates a PasskeysRails config file, updates the routes and adds migrations.
 
 Example:
     bin/rails generate passkeys-rails:install

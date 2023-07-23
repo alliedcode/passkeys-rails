@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :passkey, class: "Passkeys::Rails::Passkey" do
+  factory :passkey, class: "PasskeysRails::Passkey" do
     agent
     sequence(:identifier) { |i| "identifier #{i}" }
     sequence(:public_key) { |i| "public key #{i}" }
