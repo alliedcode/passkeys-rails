@@ -1,5 +1,8 @@
+[![Build Status](https://app.travis-ci.com/alliedcode/passkeys-rails.svg?branch=main)](https://travis-ci.org/alliedcode/passkeys-rails)
+[![codecov](https://codecov.io/gh/alliedcode/passkeys-rails/branch/main/graph/badge.svg?token=UHSNJDUL21)](https://codecov.io/gh/alliedcode/passkeys-rails)
+
 # PasskeysRails
-Short description and motivation.
+Devise is awesome, but we don't need all that UI/UX for PassKeys.  This gem is to make it easy to provide a back end that authenticates a mobile front end with PassKeys.
 
 ## Usage
 rails passkeys-rails::install
@@ -21,9 +24,6 @@ Or install it yourself as:
 ```bash
 $ gem install passkeys_rails
 ```
-
-## Coverage
-[![codecov](https://codecov.io/gh/alliedcode/passkeys-rails/branch/main/graph/badge.svg?token=UHSNJDUL21)](https://codecov.io/gh/alliedcode/passkeys-rails)
 
 ## Contributing
 Contribution directions go here.

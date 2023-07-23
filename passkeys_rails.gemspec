@@ -6,19 +6,15 @@ Gem::Specification.new do |spec|
   spec.version     = PasskeysRails::VERSION
   spec.authors     = ["Troy Anderson"]
   spec.email       = ["troy@alliedcode.com"]
-  spec.homepage    = "https://www.alliedcode.com" # TODO: Put your gem's website or public repo URL here.
-  spec.summary     = "This is a short summary" # TODO: Write a short summary, because RubyGems requires one."
-  spec.description = "This is a longer description" # "TODO: Write a longer description or delete this line."
+  spec.homepage    = "https://github.com/alliedcode/passkeys-rails"
+  spec.summary     = "PassKey authentication back end with simple API"
+  spec.description = "Devise is awesome, but we don't need all that UI/UX for PassKeys.  This gem is to make it easy to provide a back end that authenticates a mobile front end with PassKeys."
   spec.license     = "MIT"
   spec.required_ruby_version = ">= 3.1"
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the "allowed_push_host"
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://www.alliedcode.com" # TODO: Put your gem's public repo URL here.
-  spec.metadata["changelog_uri"] = "https://www.alliedcode.com" # TODO: Put your gem's CHANGELOG.md URL here.
+  spec.metadata["source_code_uri"] = "https://github.com/alliedcode/passkeys-rails"
+  spec.metadata["changelog_uri"] = "https://github.com/alliedcode/passkeys-rails/CHANGELOG.md"
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 
