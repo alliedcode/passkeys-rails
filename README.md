@@ -22,6 +22,9 @@ Or install it yourself as:
 $ gem install passkeys_rails
 ```
 
+## Coverage
+[![codecov](https://codecov.io/gh/alliedcode/passkeys-rails/branch/main/graph/badge.svg?token=UHSNJDUL21)](https://codecov.io/gh/alliedcode/passkeys-rails)
+
 ## Contributing
 Contribution directions go here.
 
