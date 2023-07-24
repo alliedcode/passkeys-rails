@@ -22,8 +22,8 @@ RSpec.describe ApplicationController do
     end
   end
 
-  context "with a valid auth token" do
-    let(:agent) { create(:agent) }
+  context "with a valid auth token for a registered user" do
+    let(:agent) { create(:agent, :registered) }
     let(:additional_headers) { { 'X-Auth' => PasskeysRails::GenerateAuthToken.call(agent:).auth_token } }
 
     context 'when visiting the index page' do
@@ -39,6 +39,24 @@ RSpec.describe ApplicationController do
         get_index
         expect(response.code.to_i).to eq 200
         expect(json[:username]).to eq agent.username
+      end
+    end
+  end
+
+  context "with an auth token for an unregistered user (registration in process, but not complete)" do
+    context 'when visiting the index page' do
+      it "is unauthorized" do
+        get_index
+        expect(response.code.to_i).to eq 401
+        expect(error).to match([:authentication, 'unauthorized', "You are not authorized to access this resource."])
+      end
+    end
+
+    context 'when visiting the home page' do
+      it "renders, but there's no username" do
+        get_home
+        expect(response.code.to_i).to eq 200
+        expect(json[:username]).to be_nil
       end
     end
   end

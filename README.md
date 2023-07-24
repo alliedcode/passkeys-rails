@@ -1,4 +1,4 @@
-[![Gem Version](https://badge.fury.io/rb/passkeys-rails.svg?cachebust=4)](https://badge.fury.io/rb/passkeys-rails)
+[![Gem Version](https://badge.fury.io/rb/passkeys-rails.svg?cachebust=5)](https://badge.fury.io/rb/passkeys-rails)
 [![Build Status](https://app.travis-ci.com/alliedcode/passkeys-rails.svg?branch=main)](https://travis-ci.org/alliedcode/passkeys-rails)
 [![codecov](https://codecov.io/gh/alliedcode/passkeys-rails/branch/main/graph/badge.svg?token=UHSNJDUL21)](https://codecov.io/gh/alliedcode/passkeys-rails)
 
