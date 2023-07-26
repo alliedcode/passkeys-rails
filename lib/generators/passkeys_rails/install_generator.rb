@@ -10,7 +10,7 @@ module PasskeysRails
       end
 
       def add_routes
-        route 'mount PasskeysRails::Engine => "/passkeys_rails"'
+        route 'mount PasskeysRails::Engine => "/passkeys"'
       end
 
       def show_readme

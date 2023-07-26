@@ -1,3 +1,7 @@
+### 0.1.5
+
+* Added default_class and class_whitelist config parameters.
+
 ### 0.1.4
 
 * Changed namespace from Passkeys::Rails to PasskeysRails

@@ -30,7 +30,7 @@ RSpec.describe PasskeysRails::Generators::InstallGenerator do
           end
         end
         file 'routes.rb' do
-          contains 'mount PasskeysRails::Engine => "/passkeys_rails"'
+          contains 'mount PasskeysRails::Engine => "/passkeys"'
         end
       end
     }
