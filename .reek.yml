@@ -15,3 +15,5 @@ detectors:
     - PasskeysRails#auth_token_algorithm
     - PasskeysRails#auth_token_expires_in
     - PasskeysRails#auth_token_secret
+    - PasskeysRails#default_class
+    - PasskeysRails#class_whitelist

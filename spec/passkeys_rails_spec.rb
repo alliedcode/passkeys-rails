@@ -1,13 +1,4 @@
 RSpec.describe PasskeysRails do
-  after {
-    # Restore defaults so other specs aren't affected
-    described_class.config do |c|
-      c.auth_token_secret = Rails.application.secret_key_base
-      c.auth_token_algorithm = "HS256"
-      c.auth_token_expires_in = 30.days
-    end
-  }
-
   it "has a version number" do
     expect(PasskeysRails::VERSION).not_to be_nil
   end
@@ -32,5 +23,19 @@ RSpec.describe PasskeysRails do
       .to change { described_class.auth_token_secret }
       .from(Rails.application.secret_key_base)
       .to("MY SECRET")
+  end
+
+  it "allows customization default_class" do
+    expect { described_class.default_class = "AdminUser" }
+      .to change { described_class.default_class }
+      .from("User")
+      .to("AdminUser")
+  end
+
+  it "allows customization class_whitelist" do
+    expect { described_class.class_whitelist = %w[User AdminUser] }
+      .to change { described_class.class_whitelist }
+      .from(nil)
+      .to match_array(%w[User AdminUser])
   end
 end

@@ -55,5 +55,14 @@ module Requests
         expect(call_api && error).to match [:authentication, 'missing_parameter', /.+ is missing/]
       end
     end
+
+    RSpec.shared_examples "a failing call" do |code, message|
+      it "with a resulting code and message" do
+        result = call
+        expect(result).to be_failure
+        expect(result.code).to eq code
+        expect(result.message).to match(message)
+      end
+    end
   end
 end

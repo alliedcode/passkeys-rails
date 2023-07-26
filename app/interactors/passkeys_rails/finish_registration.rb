@@ -40,25 +40,42 @@ module PasskeysRails
           context.fail! code: :passkey_error, message: e.message
         end
 
-        create_authenticatable! if authenticatable_class.present?
+        create_authenticatable! if aux_class_name.present?
+      end
+    end
+
+    def aux_class_name
+      @aux_class_name ||= authenticatable_class || PasskeysRails.default_class
+    end
+
+    def aux_class
+      whitelist = PasskeysRails.class_whitelist
+
+      @aux_class ||= begin
+        case whitelist
+        when Array
+          unless whitelist.include?(aux_class_name)
+            context.fail!(code: :invalid_authenticatable_class, message: "authenticatable_class (#{aux_class_name}) is not in the whitelist")
+          end
+        when present?
+          context.fail!(code: :invalid_class_whitelist,
+                        message: "class_whitelist is invalid.  It should be nil or an array of zero or more class names.")
+        end
+
+        aux_class_name.constantize
+      rescue StandardError
+        context.fail!(code: :invalid_authenticatable_class, message: "authenticatable_class (#{aux_class_name}) is not defined")
       end
     end
 
     def create_authenticatable!
-      klass = begin
-        authenticatable_class.constantize
-      rescue StandardError
-        context.fail!(code: :invalid_authenticatable_class, message: "authenticatable_class (#{authenticatable_class}) is not defined")
+      authenticatable = aux_class.create! do |obj|
+        obj.registering_with(agent) if obj.respond_to?(:registering_with)
       end
 
-      begin
-        authenticatable = klass.create! do |obj|
-          obj.registering_with(agent) if obj.respond_to?(:registering_with)
-        end
-        agent.update!(authenticatable:)
-      rescue ActiveRecord::RecordInvalid => e
-        context.fail!(code: :record_invalid, message: e.message)
-      end
+      agent.update!(authenticatable:)
+    rescue ActiveRecord::RecordInvalid => e
+      context.fail!(code: :record_invalid, message: e.message)
     end
 
     def webauthn_credential

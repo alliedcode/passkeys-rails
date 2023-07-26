@@ -50,4 +50,15 @@ RSpec.configure do |config|
 
   # infer FactoryBot as the base of :create & :build calls
   config.include FactoryBot::Syntax::Methods
+
+  # Restore defaults so specs change them without affecting others
+  config.after {
+    PasskeysRails.config do |c|
+      c.auth_token_secret = Rails.application.secret_key_base
+      c.auth_token_algorithm = "HS256"
+      c.auth_token_expires_in = 30.days
+      c.default_class = "User"
+      c.class_whitelist = nil
+    end
+  }
 end
