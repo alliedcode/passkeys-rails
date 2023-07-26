@@ -133,6 +133,48 @@ This will add the `passkeys_rails.rb` configuration file, passkeys routes, and a
 
  In the future, the intention is to have the `.code` value stay consistent even if the `.message` changes.  This also allows you to localize the messages as need using the code.
 
+### Test Helpers
+
+PasskeysRails includes some test helpers for integration tests.  In order to use them, you need to include the module in your test cases/specs.
+
+### Integration tests
+
+Integration test helpers are available by including the `PasskeysRails::IntegrationHelpers` module.
+
+```ruby
+class PostTests < ActionDispatch::IntegrationTest
+  include PasskeysRails::Test::IntegrationHelpers
+end
+```
+Now you can use the following `logged_in_headers` method in your integration tests.`
+
+```ruby
+  test 'authenticated users can see posts' do
+    user = User.create
+    get '/posts', headers: logged_in_headers('username-123', user)
+    assert_response :success
+  end
+```
+
+RSpec can include the `IntegrationHelpers` module in their `:feature` and `:request` specs.
+
+```ruby
+RSpec.configure do |config|
+  config.include PasskeysRails::Test::IntegrationHelpers, type: :feature
+  config.include PasskeysRails::Test::IntegrationHelpers, type: :request
+end
+```
+
+```ruby
+RSpec.describe 'Posts', type: :request do
+  let(:user) { User.create }
+  it "allows authenticated users to see posts" do
+    get '/posts', headers: logged_in_headers('username-123', user)
+    expect(response).to be_success
+  end
+end
+```
+
 ### Mobile Application Integration
 
 **TODO**: Describe the APIs and point to the soon-to-be-created reference mobile applications for how to use **passkeys-rails** for passkey authentication.

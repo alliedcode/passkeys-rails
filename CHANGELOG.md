@@ -1,3 +1,9 @@
+### 0.1.6
+
+* Added IntegrationHelpers to support client testing.
+* Updated methods for interfacing with Rails client app.
+* Changed route path added by the generator.
+
 ### 0.1.5
 
 * Added default_class and class_whitelist config parameters.

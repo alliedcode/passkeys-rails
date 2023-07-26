@@ -4,6 +4,10 @@ require 'passkeys_rails/version'
 require_relative "generators/passkeys_rails/install_generator"
 
 module PasskeysRails
+  module Test
+    autoload :IntegrationHelpers, 'passkeys_rails/test/integration_helpers'
+  end
+
   # Secret used to encode the auth token.
   # Rails.application.secret_key_base is used if none is defined here.
   # Changing this value will invalidate all tokens that have been fetched
