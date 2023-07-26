@@ -1,12 +1,16 @@
-### 0.1.6
+### 0.1.7
 
 * Added IntegrationHelpers to support client testing.
 * Updated methods for interfacing with Rails client app.
 * Changed route path added by the generator.
 
-### 0.1.5
+### 0.1.6
 
 * Added default_class and class_whitelist config parameters.
+
+### 0.1.5
+
+* Updated validation to ensure the agent has completed registration to be considered valid.
 
 ### 0.1.4
 
