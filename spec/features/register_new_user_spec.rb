@@ -12,6 +12,7 @@ RSpec.describe 'Register new user', type: :request do
   let(:actual_origin) { origin }
   let(:credential) { create_credential(client:) }
   let(:credential_public_key) { credential[1] }
+  let(:authenticatable) { {} }
 
   it "requests a challenge, follows up with a registration request, and receives a valid auth token" do
     post '/passkeys_rails/passkeys/challenge', params: challenge_params.to_json, headers: json_content_type_headers
@@ -31,7 +32,7 @@ RSpec.describe 'Register new user', type: :request do
       }
     }
 
-    register_params = { credential: }
+    register_params = { credential:, authenticatable: }
 
     post '/passkeys_rails/passkeys/register', params: register_params.to_json, headers: json_content_type_headers
     expect(json[:error]).to be_blank

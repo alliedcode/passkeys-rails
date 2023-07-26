@@ -9,7 +9,7 @@ RSpec.describe ApplicationController do
       it "is unauthorized" do
         get_index
         expect(response.code.to_i).to eq 401
-        expect(error).to match([:authentication, 'unauthorized', "You are not authorized to access this resource."])
+        expect(error).to match([:authentication, 'missing_token', "X-Auth header is required"])
       end
     end
 
@@ -48,7 +48,7 @@ RSpec.describe ApplicationController do
       it "is unauthorized" do
         get_index
         expect(response.code.to_i).to eq 401
-        expect(error).to match([:authentication, 'unauthorized', "You are not authorized to access this resource."])
+        expect(error).to match([:authentication, 'missing_token', "X-Auth header is required"])
       end
     end
 

@@ -11,7 +11,7 @@ module PasskeysRails
 
     def register
       result = PasskeysRails::FinishRegistration.call!(credential: attestation_credential_params.to_h,
-                                                       authenticatable_class:,
+                                                       authenticatable_info: authenticatable_info&.to_h,
                                                        username: session.dig(:passkeys_rails, :username),
                                                        challenge: session.dig(:passkeys_rails, :challenge))
 
@@ -43,8 +43,8 @@ module PasskeysRails
       credential.permit(:id, :rawId, :type, { response: %i[attestationObject clientDataJSON] })
     end
 
-    def authenticatable_class
-      params[:authenticatable_class]
+    def authenticatable_info
+      params.require[:authenticatable].permit(:class, :params) if params[:authenticatable].present?
     end
 
     def authentication_params

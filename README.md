@@ -10,11 +10,10 @@ The purpose of this gem is to make it easy to provide a rails back end API that 
 
 The target use case for this gem is a mobile application that uses a rails based API service to manage resources.  The goal is to make it simple to register and authenticate users using passkeys from mobile applications in a rails API service.
 
+
 ## Usage
 
-    rails g passkeys_rails::install
-
-**PasskeysRails** maintains an `Agent` model and related `Passeys`.  If you have a user model, add `include PasskeysRails::Authenticatable` to your model and include the name of that class (e.g. `"User"`) in the `authenticatable_class` param when calling the register API or set the `PasskeysRails.default_class` to the name of that class.
+**PasskeysRails** maintains an `Agent` model and related `Passkeys`.  If you have a user model, add `include PasskeysRails::Authenticatable` to your model and include the name of that class (e.g. `"User"`) in the `authenticatable_class` param when calling the register API or set the `PasskeysRails.default_class` to the name of that class.
 
 ### Optionally providing a **"user"** model during registration
 
@@ -51,17 +50,92 @@ Or install it yourself as:
 $ gem install passkeys_rails
 ```
 
-Depending on your application's configuration some manual setup may be required:
+Finally, execute:
 
-  1. Add a before_action to all controllers that require authentication to use.
+```bash
+$ rails generate passkeys_rails:install
+```
 
-     For example:
+This will add the `passkeys_rails.rb` configuration file, passkeys routes, and a couple of database migrations to your project.
 
-        `before_action :authenticate_passkey!, except: [:index]`
+### Adding to an standard rails project
 
-  2. Optionally `include PasskeysRails::Authenticatable` in the model(s) you are using for authentication.  For example, your `User` model.
+1. Add `before_action :authenticate_passkey!`
 
-  3. See the reference mobile applications for how to use **passkeys-rails** for passkey authentication.
+ To prevent access to controller actions, add `before_action :authenticate_passkey!`.  If an action is attempted without an authenticated entity, an error will be rendered in JSON with an :unauthorized result code.
+
+1. Use `current_agent` and `current_agent.authenticatable`
+
+ To access the currently authenticated entity, use `current_agent`.  If you associated the registration of the agent with one of your own models, use `current_agent.authenticatable`.  For example, if you associated the `User` class with the registration, `current_agent.authenticatable` will be a User object.
+
+1. Add `include PasskeysRails::Authenticatable` to model class(es)
+
+ If you have one or more classes that you want to use with authentication - e.g. a User class and an AdminUser class - add `include PasskeysRails::Authenticatable` to each of those classes.  That adds a `registered?` method that you can call on your model to determine if they are registerd with your service, and a `registering_with(params)` method that you can override to initialize attributes of your model when it is created during registration. `params` is a hash with params passed to the API when registering.  When called, your object has been built, but not yet saved.  Upon return, **PasskeysRails** will attempt to save your object before finishing registration.  If it is not valid, the registration will fail as well, returning the error error details to the caller.
+
+### Adding to a Grape API rails project
+
+1. Call `PasskeysRails.authenticate(request)` to authenticate the request.
+
+ Call `PasskeysRails.authenticate(request)` to get an object back that responds to `.success?` and `.failure?` as well as `.agent`, `.code`, and `.message`.
+
+ Alternatively, call `PasskeysRails.authenticate!(request)` from a helper in your base class.  It will raise a `PasskeysRails.Error` exception if the caller isn't authenticated.  You can catch the exception and render an appropriate error.  The exception contains the error code and message.
+
+1. Consider adding the following helpers to your base API class:
+
+```ruby
+  helpers do
+    # Authenticate the request and cache the result
+    def passkey
+      @passkey ||= PasskeysRails.authenticate(request)
+    end
+
+    # Raise an exception if the request is not authentic
+    def authenticate_passkey!
+      error!({ code: passkey.code, message: passkey.message }, :unauthorized) if passkey.failure?
+    end
+
+    # Return the Passkeys::Agent if authentic, else return nil
+    def current_agent
+      passkey.agent
+    end
+
+    # If you have set authenticatable to be a User, you can use this to access the user from Grape endpoint methods
+    def current_user
+      user = current_agent&.authenticatable
+      user.is_a?(User) ? user : nil # sanity check to be sure authenticatable is a User
+    end
+  end
+```
+
+ To prevent access to various endpoints, add `before_action :authenticate_passkey!` or call `authenticate_passkey!` from any method that requires authentication.  If an action is attempted without an authenticated entity, an error will be rendered in JSON with an :unauthorized result code.
+
+1. Use `current_agent` and `current_agent.authenticatable`
+
+ To access the currently authenticated entity, use `current_agent`.  If you associated the registration of the agent with one of your own models, use `current_agent.authenticatable`.  For example, if you associated the `User` class with the registration, `current_agent.authenticatable` will be a User object.
+
+### Authentication Failure
+
+1. In the event of authentication failure, PasskeysRails returns an error code and message.
+
+1. In a standard rails controller, the error code and message are rendered in JSON if `before_action :authenticate_passkey!` fails.
+
+1. In Grape, the error code and message are available in the result of the `PasskeysRails.authenticate(request)` method.
+
+1. From standard rails controllers, you can also access `passkey_authentication_result` to get the code and message.
+
+1. For `PasskeysRails.authenticate(request)` and `passkey_authentication_result`, the result is an object that respods to `.success?` and `.failure?`.
+ - When `.success?` is true (`.failure?` is false), the resources is authentic and it also responds to `.agent`, returning a PasskeysRails::Agent
+ - When `.success?` is false (`.failure?` is true), it responds to `.code` and `.message` to expose the error details.
+ - When `.code` is `:missing_token`, `.message` is **X-Auth header is required**, which means the caller didn't supply the auth header.
+ - When `.code` is `:invalid_token`, `.message` is **Invalid token - no agent exists with agent_id**, which means that the auth data is not valid.
+ - When `.code` is `:expired_token`, `.message` is **The token has expired**, which means that the token is valid, but expired, thuis it's not considered authentic.
+ - When `.code` is `:token_error`, `.message` is a description of the error.  This is a catch-all in the event we are unable to decode the token.
+
+ In the future, the intention is to have the `.code` value stay consistent even if the `.message` changes.  This also allows you to localize the messages as need using the code.
+
+### Mobile Application Integration
+
+**TODO**: Describe the APIs and point to the soon-to-be-created reference mobile applications for how to use **passkeys-rails** for passkey authentication.
 
 ## Contributing
 

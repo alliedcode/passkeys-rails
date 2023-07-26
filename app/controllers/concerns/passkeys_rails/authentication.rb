@@ -9,22 +9,17 @@ module PasskeysRails
     end
 
     def current_agent
-      @current_agent ||= (request.headers['HTTP_X_AUTH'].present? &&
-                         passkey_authentication_result.success? &&
+      @current_agent ||= (passkey_authentication_result.success? &&
                          passkey_authentication_result.agent.registered? &&
                          passkey_authentication_result.agent) || nil
     end
 
     def authenticate_passkey!
-      return if current_agent.present?
-
-      raise PasskeysRails::Error.new(:authentication,
-                                     code: :unauthorized,
-                                     message: "You are not authorized to access this resource.")
+      @authenticate_passkey ||= PasskeysRails.authenticate!(request)
     end
 
     def passkey_authentication_result
-      @passkey_authentication_result ||= PasskeysRails::ValidateAuthToken.call(auth_token: request.headers['HTTP_X_AUTH'])
+      @passkey_authentication_result ||= PasskeysRails.authenticate(request)
     end
   end
 end

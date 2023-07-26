@@ -41,6 +41,28 @@ module PasskeysRails
   # for example: %w[User AdminUser]
   mattr_accessor :class_whitelist, default: nil
 
+  # Returns an Interactor::Context that indicates if the request is authentic.
+  #
+  # .success? is true if authentic
+  # .agent is the Passkey::Agent on success
+  #
+  # .failure? is true if failed (just the opposite of .success?)
+  # .code is the error code on failure
+  # .message is the human readable error message on failure
+  def self.authenticate(request)
+    PasskeysRails::ValidateAuthToken.call(auth_token: request.headers['X-Auth'])
+  end
+
+  # Raises a PasskeysRails::Error exception if the request is not authentic.
+  def self.authenticate!(request)
+    auth = authenticate(request)
+    return if auth.success?
+
+    raise PasskeysRails::Error.new(:authentication,
+                                   code: auth.code,
+                                   message: auth.message)
+  end
+
   class << self
     def config
       yield self

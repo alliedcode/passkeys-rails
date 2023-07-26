@@ -1,5 +1,5 @@
 RSpec.describe PasskeysRails::FinishRegistration do
-  let(:call) { described_class.call credential:, username:, challenge: original_challenge, authenticatable_class: }
+  let(:call) { described_class.call credential:, username:, challenge: original_challenge, authenticatable_info: }
 
   shared_examples "a successful call" do |username|
     it "updates the agent and returns the username and auth token" do
@@ -15,7 +15,9 @@ RSpec.describe PasskeysRails::FinishRegistration do
   end
 
   context "with all parameters" do
+    let(:authenticatable_info) { { class: authenticatable_class, params: authenticatable_params } }
     let(:authenticatable_class) { nil }
+    let(:authenticatable_params) { nil }
     let(:credential) { nil }
     let(:username) { nil }
     let(:original_challenge) { "CHALLENGE" }
@@ -75,7 +77,13 @@ RSpec.describe PasskeysRails::FinishRegistration do
             context "when the class_whitelist is an empty array" do
               before { PasskeysRails.class_whitelist = [] }
 
-              it_behaves_like "a failing call", :invalid_authenticatable_class, "authenticatable_class (User) is not defined"
+              it_behaves_like "a failing call", :invalid_authenticatable_class, "authenticatable_class (User) is not in the whitelist"
+            end
+
+            context "when the class_whitelist is an array, but User is not in it" do
+              before { PasskeysRails.class_whitelist = %w[Account AdminUser] }
+
+              it_behaves_like "a failing call", :invalid_authenticatable_class, "authenticatable_class (User) is not in the whitelist"
             end
 
             context "when the class_whitelist includes User" do
@@ -88,6 +96,12 @@ RSpec.describe PasskeysRails::FinishRegistration do
                   .to change { User.count }.by(1)
                   .and change { agent.reload.authenticatable }.from(nil)
               end
+            end
+
+            context "when the class_whitelist is a string (invalid)" do
+              before { PasskeysRails.class_whitelist = "invalid" }
+
+              it_behaves_like "a failing call", :invalid_class_whitelist, "class_whitelist is invalid.  It should be nil or an array of zero or more class names."
             end
           end
         end
