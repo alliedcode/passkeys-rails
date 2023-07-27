@@ -4,7 +4,7 @@
 
 # PasskeysRails
 
-Devise is awesome, but we don't need all that UI/UX for PassKeys.
+Devise is awesome, but we don't need all that UI/UX for PassKeys, especially for an API back end.
 
 The purpose of this gem is to make it easy to provide a rails back end API that supports PassKey authentication.  It uses the [`webauthn`](https://github.com/w3c/webauthn) gem to do the cryptographic work and presents a simple API interface for passkey registration and authentication.
 
