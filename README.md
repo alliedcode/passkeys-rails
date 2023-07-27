@@ -177,7 +177,146 @@ end
 
 ### Mobile Application Integration
 
-**TODO**: Describe the APIs and point to the soon-to-be-created reference mobile applications for how to use **passkeys-rails** for passkey authentication.
+There are n groups of API endpoints that your mobile application may consume.
+
+1. Unauthenticated (public) endpoints
+1. Authenticated (private) endpoints
+1. Passey endpoints (for supporting authentication)
+
+**Unauthenticated endpoints** can be consumed without and authentication.
+
+**Authenticated endpoints** are protected by `authenticate_passkey!` or `PasskeysRails.authenticate!(request)`.  Those methods check for and validate the `X-Auth` header, which must be set to the auth token returned in the `AuthResponse`, described below.
+
+**Passkey endpoints** are supplied by this gem and allow you to register a user, authenticate (login) a user, and refresh the token.  This section describes these endpoints.
+
+All Passkey endpoints accept and respond with JSON.
+
+On **success**, they will respond with a 200 or 201 response code and relevant JSON.
+
+On **error**, they will respond with a status code of `422` (Unprocessable Entity) and a JSON `ErrorResponse` structure:
+
+```JSON
+{
+  "error": {
+    "context": "authentication",
+    "code": "Specific text code",
+    "message": "Some human readable message"
+  }
+}
+```
+
+Some endpoints return an `AuthResponse`, which has this JSON structure:
+
+```JSON
+{
+    "username": String,   # the username used during registration
+    "auth_token": String  # an expiring token to use to authenticate with the back end (X-Auth header)
+}
+```
+
+#### POST /passkeys/challenge
+
+Submit this to begin registration or authentication.
+
+Supply a `{ "username": "unique username" } ` to register a new credential.
+If all goes well, the JSON response will be the `options_for_create` from webauthn.
+If the username is already in use, or anything else goes wrong, an error with code `validation_errors` will be returned.
+
+Omit the `username` when authenticating (logging in).
+The JSON response will be the `options_for_get` from webauthn.
+
+#### POST /passkeys/register
+
+After calling the `challenge` endpoint with a `username`, and handling its response, finish registering by calling this endpoint.
+
+Supply the following JSON structure:
+
+```JSON
+# POST body
+{
+  # NOTE: credential will likely come directly from the PassKeys class/library on the platform
+  "credential": {
+    "id": String,
+    "rawId": String,
+    "type": String,
+    "response": {
+      "attestationObject": String,
+      "clientDataJSON": String
+    }
+  },
+  # authenticatable is optional and is informas PasskeysRails how to build your "user" model
+  "authenticatable": { # optional
+    "class": "User", # whatever class to which you want this credential to apply (as described earlier)
+    "params": { }    # Any params you want passed as a hash to the registering_with method on that class
+  }
+}
+```
+
+On **success**, the response is an `AuthResponse`.
+
+Possible **failure codes** (using the `ErrorResponse` structure) are:
+
+- webauthn_error - something is wrong with the credential
+- error - something else went wrong during credentail validation - see the `message` in the `ErrorResponse`
+- passkey_error - unable to persiste the passkey
+- invalid_authenticatable_class - the supplied authenticatable class can't be created/found (check spelling & capitalization)
+- invalid_class_whitelist - the whitelist in the passkeys_rails.rb configuration is invalid - be sure it's nil or an array
+- invalid_authenticatable_class - the supplied authenticatable class is not allowed - maybe it's not in the whitelist
+- record_invalid - the object of the supplied authenticatable class cannot be saved due to validation errors
+- agent_not_found - the agent referenced in the credential cannot be found in the database
+
+#### POST /passkeys/authenticate
+
+After calling the `challenge` endpoint without a `username`, and handling its response, finish authenticating by calling this endpoint.
+
+Supply the following JSON structure:
+
+```JSON
+# POST body
+{
+  # NOTE: all of this will likely come directly from the PassKeys class/library on the platform
+  "id": String,                   # Base64 encoded assertion.credentialID
+  "rawId": String,                # Base64 encoded assertion.credentialID
+  "type": "public-key",
+  "response": {
+    "authenticatorData": String,  # Base64 encoded assertion.rawAuthenticatorData
+    "clientDataJSON": String,     # Base64 encoded assertion.rawClientDataJSON
+    "signature": String,          # Base64 encoded signature
+    "userHandle":String           # Base64 encoded assertion.userID
+  }
+}
+```
+On **success**, the response is an `AuthResponse`.
+
+Possible **failure codes** (using the `ErrorResponse` structure) are:
+
+- webauthn_error - something is wrong with the credential
+- passkey_not_found - the passkey referenced in the credential cannot be found in the database
+
+#### POST /passkeys/refresh
+
+The token will expire after some time (configurable in passkeys_rails.rb).  Before that happens, refresh it using this API.  Once it's expired, to get a new token, use the /authentication API.
+
+Supply the following JSON structure:
+
+```JSON
+# POST body
+{
+  token: String
+}
+```
+
+On **success**, the response is an `AuthResponse` with a new, refreshed token.
+
+Possible **failure codes** (using the `ErrorResponse` structure) are:
+
+- invalid_token - the token data is invalid
+- expired_token - the token is expired
+- token_error - some other error ocurred when decoding the token
+
+## Reference/Example Mobile Applications
+
+**TODO**: Point to the soon-to-be-created reference mobile applications for how to use **passkeys-rails** for passkey authentication.
 
 ## Contributing
 
