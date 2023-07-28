@@ -45,6 +45,12 @@ module PasskeysRails
   # for example: %w[User AdminUser]
   mattr_accessor :class_whitelist, default: nil
 
+  # This is only used by the debug_login endpoint.
+  # CAUTION: It is very insecure to set DEBUG_LOGIN_REGEX in a production environment.
+  def self.debug_login_regex
+    ENV['DEBUG_LOGIN_REGEX'].present? ? Regexp.new(ENV['DEBUG_LOGIN_REGEX']) : nil
+  end
+
   # Returns an Interactor::Context that indicates if the request is authentic.
   #
   # .success? is true if authentic

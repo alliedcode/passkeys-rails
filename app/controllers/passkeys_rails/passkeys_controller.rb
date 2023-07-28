@@ -30,6 +30,15 @@ module PasskeysRails
       render json: { username: result.username, auth_token: result.auth_token }
     end
 
+    # This action exists to allow easier mobile app debugging as it may not
+    # be possible to acess Passkey functionality in mobile simulators.
+    # It is only routable if DEBUG_LOGIN_REGEX is set in the server environment.
+    # CAUTION: It is very insecure to set DEBUG_LOGIN_REGEX in a production environment.
+    def debug_login
+      result = PasskeysRails::DebugLogin.call!(username: debug_login_params[:username])
+      render json: { username: result.username, auth_token: result.auth_token }
+    end
+
     protected
 
     def challenge_params
@@ -56,6 +65,11 @@ module PasskeysRails
     def refresh_params
       params.require(:auth_token)
       params.permit(:auth_token)
+    end
+
+    def debug_login_params
+      params.require(:username)
+      params.permit(:username)
     end
   end
 end

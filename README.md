@@ -314,6 +314,37 @@ Possible **failure codes** (using the `ErrorResponse` structure) are:
 - expired_token - the token is expired
 - token_error - some other error ocurred when decoding the token
 
+#### POST /passkeys/debug_login
+
+As it may not be possible to acess Passkey functionality in mobile simulators, this endpoint may be called to login (authenticate) a username while bypassing the normal challenge/response sequence.
+
+This endpoint only responds if DEBUG_LOGIN_REGEX is set in the server environment.  It is very insecure to set this variable in a production environment as it bypasses all Passkey checks.  It is only intended to be used during mobile application development.
+
+To use this endpoint:
+
+1. Manually create one or more PasskeysRails::Agent records in the database.  A unique username is required for each.
+
+1. Set DEBUG_LOGIN_REGEX to a regex that matches any username you want to use during development - for example `^test(-\d+)?$` will match `test`, `test-1`, `test-123`, etc.
+
+1. In the mobile application, call this endpoint in stead of the /passkeys/challenge and /passkeys/authenticate.  The response is identicial to that of /passkeys/authenticate.
+
+1. Use the response as if it was from /passkeys/authenticate.
+
+If you supply a username that doesn't match the DEBUG_LOGIN_REGEX, the endpoint will respond with an error.
+
+```JSON
+# POST body
+{
+  "username": String
+}
+```
+On **success**, the response is an `AuthResponse`.
+
+Possible **failure codes** (using the `ErrorResponse` structure) are:
+
+- not_allowed - Invalid username (the username doesn't match the regex)
+- agent_not_found - No agent found with that username
+
 ## Reference/Example Mobile Applications
 
 **TODO**: Point to the soon-to-be-created reference mobile applications for how to use **passkeys-rails** for passkey authentication.

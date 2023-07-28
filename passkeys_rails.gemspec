@@ -1,6 +1,5 @@
 require_relative "lib/passkeys_rails/version"
 
-# rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |spec|
   spec.name        = "passkeys-rails"
   spec.version     = PasskeysRails::VERSION
@@ -52,4 +51,3 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop-rake', "~> 0.6.0"
   spec.add_development_dependency 'rubocop-rspec', "~> 2.22.0"
 end
-# rubocop:enable Metrics/BlockLength

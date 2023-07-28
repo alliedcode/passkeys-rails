@@ -8,14 +8,13 @@ RSpec.describe PasskeysRails::PasskeysController do
   context 'with required params' do
     let(:required_params) { { auth_token: "123" } }
 
-    # rubocop:disable RSpec/VerifiedDoubles
     context 'with valid parameters and a successfull call to RefreshToken' do
       let(:agent) { create(:agent) }
 
-      it 'Succeeds and reutrns instance credentails' do
+      it 'Succeeds and returns instance credentails' do
         allow(PasskeysRails::RefreshToken)
           .to receive(:call!)
-          .and_return(double(Interactor::Context, username: "name", auth_token: "123"))
+          .and_return(Interactor::Context.build(username: "name", auth_token: "123"))
 
         call_api
 
@@ -25,6 +24,5 @@ RSpec.describe PasskeysRails::PasskeysController do
         expect(json).to include(username: "name", auth_token: "123")
       end
     end
-    # rubocop:enable RSpec/VerifiedDoubles
   end
 end
