@@ -1,3 +1,7 @@
+### 0.2.0
+
+* Added passkeys/debug_login functionality.
+
 ### 0.1.7
 
 * Added IntegrationHelpers to support client testing.
