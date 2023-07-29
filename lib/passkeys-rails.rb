@@ -53,6 +53,8 @@ module PasskeysRails
 
   # Returns an Interactor::Context that indicates if the request is authentic.
   #
+  # `request` can be a String on an Http Request
+  #
   # .success? is true if authentic
   # .agent is the Passkey::Agent on success
   #
@@ -60,10 +62,19 @@ module PasskeysRails
   # .code is the error code on failure
   # .message is the human readable error message on failure
   def self.authenticate(request)
-    PasskeysRails::ValidateAuthToken.call(auth_token: request.headers['X-Auth'])
+    auth_token = if request.is_a?(String)
+                   request
+                 elsif request.respond_to?(:headers)
+                   request.headers['X-Auth']
+                 else
+                   ""
+                 end
+
+    PasskeysRails::ValidateAuthToken.call(auth_token:)
   end
 
   # Raises a PasskeysRails::Error exception if the request is not authentic.
+  # `request` can be a String on an Http Request
   def self.authenticate!(request)
     auth = authenticate(request)
     return if auth.success?

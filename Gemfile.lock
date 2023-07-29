@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    passkeys-rails (0.2.0)
+    passkeys-rails (0.2.1)
       interactor (~> 3.1.2)
       jwt (~> 2.7.1)
       rails (~> 7.0, >= 7.0.5)
