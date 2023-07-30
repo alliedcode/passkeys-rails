@@ -3,15 +3,20 @@
 # It is only operational if DEBUG_LOGIN_REGEX is set in the server environment.
 # CAUTION: It is very insecure to set DEBUG_LOGIN_REGEX in a production environment.
 module PasskeysRails
-  class DebugLogin
+  class DebugRegister
     include Interactor
     include Debuggable
+    include AuthenticatableCreator
 
-    delegate :username, to: :context
+    delegate :username, :authenticatable_info, to: :context
 
     def call
       ensure_debug_mode
       ensure_regex_match
+
+      ActiveRecord::Base.transaction do
+        create_authenticatable! if aux_class_name.present?
+      end
 
       context.username = agent.username
       context.auth_token = GenerateAuthToken.call!(agent:).auth_token
@@ -23,8 +28,14 @@ module PasskeysRails
 
     def agent
       @agent ||= begin
+        result = BeginRegistration.call(username:)
+        context.fail!(code: result.code, message: result.message) if result.failure?
+
         agent = Agent.find_by(username:)
         context.fail!(code: :agent_not_found, message: "No agent found with that username") if agent.blank?
+
+        agent.update! registered_at: Time.current
+
         agent
       end
     end

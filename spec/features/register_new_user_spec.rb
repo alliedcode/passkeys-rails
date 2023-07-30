@@ -15,13 +15,13 @@ RSpec.describe 'Register new user', type: :request do
   let(:authenticatable) { {} }
 
   it "requests a challenge, follows up with a registration request, and receives a valid auth token" do
-    post '/passkeys_rails/passkeys/challenge', params: challenge_params.to_json, headers: json_content_type_headers
+    post '/passkeys_rails/challenge', params: challenge_params.to_json, headers: json_content_type_headers
     expect(response).to be_successful
 
     account = client.create(challenge: json[:challenge])
 
-    pending "Figuring out how to create the params from the passkeys_rails/passkeys/challenge"
-    # TODO: Not sure how create the params from the passkeys_rails/passkeys/challenge response that succeed"
+    pending "Figuring out how to create the params from the passkeys_rails/challenge"
+    # TODO: Not sure how create the params from the passkeys_rails/challenge response that succeed"
     credential = {
       id: Base64.strict_encode64(account['id']),
       rawId: Base64.strict_encode64(account['rawId']),
@@ -34,7 +34,7 @@ RSpec.describe 'Register new user', type: :request do
 
     register_params = { credential:, authenticatable: }
 
-    post '/passkeys_rails/passkeys/register', params: register_params.to_json, headers: json_content_type_headers
+    post '/passkeys_rails/register', params: register_params.to_json, headers: json_content_type_headers
     expect(json[:error]).to be_blank
     expect(response).to be_successful
   end

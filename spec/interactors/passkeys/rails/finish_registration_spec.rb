@@ -21,10 +21,11 @@ RSpec.describe PasskeysRails::FinishRegistration do
     let(:credential) { nil }
     let(:username) { nil }
     let(:original_challenge) { "CHALLENGE" }
+    let(:credential_identifier) { "SOME ID" }
 
     context "when the credential doesn't verify" do
       before {
-        attestation_credential = instance_double(WebAuthn::PublicKeyCredentialWithAttestation, id: 'id', public_key: 'pk', sign_count: 0)
+        attestation_credential = instance_double(WebAuthn::PublicKeyCredentialWithAttestation, id: credential_identifier, public_key: 'pk', sign_count: 0)
         allow(WebAuthn::Credential).to receive(:from_create).with(credential).and_return(attestation_credential)
         allow(attestation_credential).to receive(:verify).with(original_challenge).and_raise(WebAuthn::Error.new)
       }
@@ -37,7 +38,7 @@ RSpec.describe PasskeysRails::FinishRegistration do
       let(:auth_response) { { attestationObject: '123', clientDataJSON: '{}' } }
 
       before do
-        attestation_credential = instance_double(WebAuthn::PublicKeyCredentialWithAttestation, id: 'id', public_key: 'pk', sign_count: 0)
+        attestation_credential = instance_double(WebAuthn::PublicKeyCredentialWithAttestation, id: credential_identifier, public_key: 'pk', sign_count: 0)
         allow(WebAuthn::Credential).to receive(:from_create).with(credential).and_return(attestation_credential)
         allow(attestation_credential).to receive(:verify).with(original_challenge)
       end
@@ -46,6 +47,12 @@ RSpec.describe PasskeysRails::FinishRegistration do
         let!(:agent) { create(:agent, username: "Some User") }
         let(:username) { agent.username }
 
+        context "when there is already a passkey with the given identifier" do
+          before { create(:passkey, identifier: credential_identifier) }
+
+          it_behaves_like "a failing call", :passkey_error, /Validation failed:/
+        end
+
         context "when the authenticatable_class is not supplied" do
           context "when the default_class is nil" do
             before { PasskeysRails.default_class = nil }
@@ -53,7 +60,7 @@ RSpec.describe PasskeysRails::FinishRegistration do
             it_behaves_like "a successful call", "Some User"
 
             it "doesn't change the user count" do
-              expect { call }
+              expect { expect(call).to be_success }
                 .to not_change { User.count }
                 .and not_change { agent.reload.authenticatable }.from(nil)
             end
@@ -68,7 +75,7 @@ RSpec.describe PasskeysRails::FinishRegistration do
               it_behaves_like "a successful call", "Some User"
 
               it "creates a related user" do
-                expect { call }
+                expect { expect(call).to be_success }
                   .to change { User.count }.by(1)
                   .and change { agent.reload.authenticatable }.from(nil)
               end
@@ -92,7 +99,7 @@ RSpec.describe PasskeysRails::FinishRegistration do
               it_behaves_like "a successful call", "Some User"
 
               it "creates a related user" do
-                expect { call }
+                expect { expect(call).to be_success }
                   .to change { User.count }.by(1)
                   .and change { agent.reload.authenticatable }.from(nil)
               end
@@ -106,19 +113,13 @@ RSpec.describe PasskeysRails::FinishRegistration do
           end
         end
 
-        context "when there is already a passkey with the given identifier" do
-          before { create(:passkey, identifier: 'id') }
-
-          it_behaves_like "a failing call", :passkey_error, /Validation failed:/
-        end
-
         context "when the authenticatable_class is a valid class" do
           let(:authenticatable_class) { "User" }
 
           it_behaves_like "a successful call", "Some User"
 
           it "creates a related user" do
-            expect { call }
+            expect { expect(call).to be_success }
               .to change { User.count }.by(1)
               .and change { agent.reload.authenticatable }.from(nil)
           end
@@ -130,7 +131,7 @@ RSpec.describe PasskeysRails::FinishRegistration do
           it_behaves_like "a failing call", :record_invalid, /Validation failed:/
 
           it "doesn't change the agent" do
-            expect { call }.to not_change { agent.reload }
+            expect { expect(call).to be_failure }.to not_change { agent.reload }
           end
         end
 
@@ -140,7 +141,7 @@ RSpec.describe PasskeysRails::FinishRegistration do
           it_behaves_like "a failing call", :invalid_authenticatable_class, "authenticatable_class (Unknown) is not defined"
 
           it "doesn't change the agent" do
-            expect { call }.to not_change { agent.reload }
+            expect { expect(call).to be_failure }.to not_change { agent.reload }
           end
         end
       end

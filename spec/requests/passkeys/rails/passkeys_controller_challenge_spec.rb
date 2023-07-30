@@ -1,5 +1,5 @@
 RSpec.describe PasskeysRails::PasskeysController do
-  let(:call_api) { post '/passkeys_rails/passkeys/challenge', params:, headers: }
+  let(:call_api) { post '/passkeys_rails/challenge', params:, headers: }
 
   shared_examples "a successful registration initiation process" do
     it 'begins the registration process and returns the passkey challenge fields' do
