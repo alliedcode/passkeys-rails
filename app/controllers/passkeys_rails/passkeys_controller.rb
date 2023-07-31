@@ -1,6 +1,7 @@
 module PasskeysRails
   class PasskeysController < ApplicationController
-    protect_from_forgery with: :null_session
+    skip_before_action :verify_authenticity_token
+    wrap_parameters false
 
     def challenge
       result = PasskeysRails::BeginChallenge.call!(username: challenge_params[:username])
@@ -69,7 +70,7 @@ module PasskeysRails
     end
 
     def authenticatable_params
-      params.require[:authenticatable].permit(:class, :params) if params[:authenticatable].present?
+      params.require(:authenticatable).permit(:class, params: {}) if params[:authenticatable].present?
     end
 
     def authentication_params

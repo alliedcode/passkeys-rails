@@ -6,7 +6,7 @@ module Requests
     alias response_headers headers
 
     def success
-      expect(json['error_message']).to be_nil if json.is_a? Hash
+      expect(error.compact).to be_empty
       expect(response).to be_successful
     end
 

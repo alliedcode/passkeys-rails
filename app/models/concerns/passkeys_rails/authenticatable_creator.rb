@@ -5,10 +5,10 @@ module PasskeysRails
     protected
 
     def create_authenticatable!
-      authenticatable = aux_class.create! do |obj|
-        obj.agent = agent if obj.respond_to?(:agent=)
-        obj.registering_with(authenticatable_params) if obj.respond_to?(:registering_with)
-      end
+      authenticatable = aux_class.new
+      authenticatable.agent = agent if authenticatable.respond_to?(:agent=)
+      authenticatable.registering_with(authenticatable_params) if authenticatable.respond_to?(:registering_with)
+      authenticatable.save!
 
       agent.update!(authenticatable:)
     rescue ActiveRecord::RecordInvalid => e

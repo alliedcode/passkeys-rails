@@ -14,6 +14,27 @@ RSpec.describe PasskeysRails::FinishRegistration do
     end
   end
 
+  shared_examples "a user creator" do
+    it "passes authenticatable_params to the related user's registering_with method" do
+      user = User.new
+      allow(User).to receive(:new).and_return(user)
+      allow(user).to receive(:agent=).with(agent)
+      allow(user).to receive(:registering_with).with(authenticatable_params)
+
+      expect(call).to be_success
+
+      expect(User).to have_received(:new).once
+      expect(user).to have_received(:agent=).once
+      expect(user).to have_received(:registering_with).once
+    end
+
+    it "creates a related user" do
+      expect { expect(call).to be_success }
+        .to change { User.count }.by(1)
+        .and change { agent.reload.authenticatable }.from(nil)
+    end
+  end
+
   context "with all parameters" do
     let(:authenticatable_info) { { class: authenticatable_class, params: authenticatable_params } }
     let(:authenticatable_class) { nil }
@@ -73,11 +94,13 @@ RSpec.describe PasskeysRails::FinishRegistration do
               before { PasskeysRails.class_whitelist = nil }
 
               it_behaves_like "a successful call", "Some User"
+              it_behaves_like "a user creator"
 
-              it "creates a related user" do
-                expect { expect(call).to be_success }
-                  .to change { User.count }.by(1)
-                  .and change { agent.reload.authenticatable }.from(nil)
+              context "when authenticatable_params are supplied" do
+                let(:authenticatable_params) { { some: 'more data' } }
+
+                it_behaves_like "a successful call", "Some User"
+                it_behaves_like "a user creator"
               end
             end
 
@@ -97,12 +120,7 @@ RSpec.describe PasskeysRails::FinishRegistration do
               before { PasskeysRails.class_whitelist = %w[Account User AdminUser] }
 
               it_behaves_like "a successful call", "Some User"
-
-              it "creates a related user" do
-                expect { expect(call).to be_success }
-                  .to change { User.count }.by(1)
-                  .and change { agent.reload.authenticatable }.from(nil)
-              end
+              it_behaves_like "a user creator"
             end
 
             context "when the class_whitelist is a string (invalid)" do
@@ -116,13 +134,22 @@ RSpec.describe PasskeysRails::FinishRegistration do
         context "when the authenticatable_class is a valid class" do
           let(:authenticatable_class) { "User" }
 
-          it_behaves_like "a successful call", "Some User"
+          context "when PasskeysRails.default_class is nil" do
+            before { PasskeysRails.default_class = nil }
 
-          it "creates a related user" do
-            expect { expect(call).to be_success }
-              .to change { User.count }.by(1)
-              .and change { agent.reload.authenticatable }.from(nil)
+            it_behaves_like "a successful call", "Some User"
+            it_behaves_like "a user creator"
           end
+
+          context "when PasskeysRails.default_class is a different valid class" do
+            before { PasskeysRails.default_class = "Contact" }
+
+            it_behaves_like "a successful call", "Some User"
+            it_behaves_like "a user creator"
+          end
+
+          it_behaves_like "a successful call", "Some User"
+          it_behaves_like "a user creator"
         end
 
         context "when the authenticatable_class matches a class that doesn't pass validation when created" do
