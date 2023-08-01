@@ -80,28 +80,28 @@ This will add the `config/initializers/passkeys_rails.rb` configuration file, pa
 <a id="rails-Integration-standard"></a>
 ## Rails Integration <p><small>Adding to a standard rails project</small></p>
 
-1. Add `before_action :authenticate_passkey!`
+- ### Add `before_action :authenticate_passkey!`
 
- To prevent access to controller actions, add `before_action :authenticate_passkey!`.  If an action is attempted without an authenticated entity, an error will be rendered in JSON with an :unauthorized result code.
+To prevent access to controller actions, add `before_action :authenticate_passkey!`.  If an action is attempted without an authenticated entity, an error will be rendered in JSON with an :unauthorized result code.
 
-1. Use `current_agent` and `current_agent.authenticatable`
+- ### Use `current_agent` and `current_agent.authenticatable`
 
- To access the currently authenticated entity, use `current_agent`.  If you associated the registration of the agent with one of your own models, use `current_agent.authenticatable`.  For example, if you associated the `User` class with the registration, `current_agent.authenticatable` will be a User object.
+To access the currently authenticated entity, use `current_agent`.  If you associated the registration of the agent with one of your own models, use `current_agent.authenticatable`.  For example, if you associated the `User` class with the registration, `current_agent.authenticatable` will be a User object.
 
-1. Add `include PasskeysRails::Authenticatable` to model class(es)
+- ### Add `include PasskeysRails::Authenticatable` to model class(es)
 
  If you have one or more classes that you want to use with authentication - e.g. a User class and an AdminUser class - add `include PasskeysRails::Authenticatable` to each of those classes.  That adds a `registered?` method that you can call on your model to determine if they are registerd with your service, and a `registering_with(params)` method that you can override to initialize attributes of your model when it is created during registration. `params` is a hash with params passed to the API when registering.  When called, your object has been built, but not yet saved.  Upon return, **PasskeysRails** will attempt to save your object before finishing registration.  If it is not valid, the registration will fail as well, returning the error error details to the caller.
 
 <a id="rails-Integration-grape"></a>
 ## Rails Integration - <p><small>Adding to a Grape API rails project</small></p>
 
-1. Call `PasskeysRails.authenticate(request)` to authenticate the request.
+- ### Call `PasskeysRails.authenticate(request)` to authenticate the request.
 
  Call `PasskeysRails.authenticate(request)` to get an object back that responds to `.success?` and `.failure?` as well as `.agent`, `.code`, and `.message`.
 
  Alternatively, call `PasskeysRails.authenticate!(request)` from a helper in your base class.  It will raise a `PasskeysRails.Error` exception if the caller isn't authenticated.  You can catch the exception and render an appropriate error.  The exception contains the error code and message.
 
-1. Consider adding the following helpers to your base API class:
+- ### Consider adding the following helpers to your base API class:
 
 ```ruby
   helpers do
@@ -130,7 +130,7 @@ This will add the `config/initializers/passkeys_rails.rb` configuration file, pa
 
  To prevent access to various endpoints, add `before_action :authenticate_passkey!` or call `authenticate_passkey!` from any method that requires authentication.  If an action is attempted without an authenticated entity, an error will be rendered in JSON with an :unauthorized result code.
 
-1. Use `current_agent` and `current_agent.authenticatable`
+- ### Use `current_agent` and `current_agent.authenticatable`
 
  To access the currently authenticated entity, use `current_agent`.  If you associated the registration of the agent with one of your own models, use `current_agent.authenticatable`.  For example, if you associated the `User` class with the registration, `current_agent.authenticatable` will be a User object.
 
