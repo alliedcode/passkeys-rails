@@ -1,3 +1,14 @@
+### 0.3.0
+
+* Added debug_register endpoint.
+* Fixed authenticatable_params for register enpoint.
+* Added notifications to certain controller actions.
+* Improved spec error helper.
+
+### 0.2.1
+
+Added ability to pass either the auth token string or a request with one in the header to authenticate methods.
+
 ### 0.2.0
 
 * Added passkeys/debug_login functionality.
