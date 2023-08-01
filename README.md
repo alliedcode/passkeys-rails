@@ -1,35 +1,53 @@
+# PasskeysRails - easy to integrate back end for implementing mobile passkeys
+
 [![Gem Version](https://badge.fury.io/rb/passkeys-rails.svg?cachebust=0.2.1)](https://badge.fury.io/rb/passkeys-rails)
 [![Build Status](https://app.travis-ci.com/alliedcode/passkeys-rails.svg?branch=main)](https://travis-ci.org/alliedcode/passkeys-rails)
 [![codecov](https://codecov.io/gh/alliedcode/passkeys-rails/branch/main/graph/badge.svg?token=UHSNJDUL21)](https://codecov.io/gh/alliedcode/passkeys-rails)
 
-# PasskeysRails
+<p align="center" >
+Created by <b>Troy Anderson, Allied Code</b> - <a href="https://alliedcode.com">alliedcode.com</a>
+</p>
 
-Devise is awesome, but we don't need all that UI/UX for PassKeys, especially for an API back end.
+PasskeysRails is a gem you can add to a Rails app to enable passskey registration and authorization from mobile front ends.  PasskeysRails leverages webauthn for the cryptographic work, and presents a simple API interface for passkey registration, authentication, and testing.
 
 The purpose of this gem is to make it easy to provide a rails back end API that supports PassKey authentication.  It uses the [`webauthn`](https://github.com/w3c/webauthn) gem to do the cryptographic work and presents a simple API interface for passkey registration and authentication.
 
 The target use case for this gem is a mobile application that uses a rails based API service to manage resources.  The goal is to make it simple to register and authenticate users using passkeys from mobile applications in a rails API service.
 
+What about [devise](https://github.com/heartcombo/devise)?  Devise is awesome, but we don't need all that UI/UX for PassKeys, especially for an API back end.
+
+## Documentation
+* [Usage](#usage)
+* [Installation](#installation)
+* [Rails Integration - Standard](#rails-Integration-standard)
+* [Rails Integration - Grape](#rails-Integration-grape)
+* [Notifications](#notifications)
+* [Failure Codes](#failure-codes)
+* [Testing](#testing)
+* [Mobile App Integration](#mobile-application-integration)
+* [Reference/Example Mobile Applications](#referenceexample-mobile-applications)
 
 ## Usage
 
-**PasskeysRails** maintains an `Agent` model and related `Passkeys`.  If you have a user model, add `include PasskeysRails::Authenticatable` to your model and include the name of that class (e.g. `"User"`) in the `authenticatable_class` param when calling the register API or set the `PasskeysRails.default_class` to the name of that class.
+**PasskeysRails** maintains a `PasskeysRails::Agent` model and related `PasskeysRails::Passkeys`.  In rails apps that maintain their own "user" model, add `include PasskeysRails::Authenticatable` to that model and include the name of that class (e.g. `"User"`) in the `authenticatable_class` param when calling the register API or set the `PasskeysRails.default_class` to the name of that class.
+
+In mobile apps, leverage the platform specific Passkeys APIs for ***registration*** and ***authentication***, and call the **PasskeysRails** API endpoints to complete the ceremony.  **PasskeysRails** provides endpoints to support ***registration***, ***authentication***, ***token refresh***, and ***debugging***.
 
 ### Optionally providing a **"user"** model during registration
 
-**PasskeysRails** does not require that you supply your own model, but it's often useful to do so.  For example, if you have a User model that you would like to have created at registration, you can supply the model name in the `finishRegistration` API call.
+**PasskeysRails** does not require any application specific models, but it's often useful to have one.  For example, a User model can be created at registration.  **PasskeysRails** provides two mechanisms to support this.  Either provide the name of the model in the `authenticatable_class` param when calling the `finishRegistration` endpoint, or set a `default_class` in `config/initializers/passkeys_rails.rb`.
 
-**PasskeysRails** supports multiple `"user"` models.  Whatever model name you supply will be created during a successful the `finishRegiration` API call. When created, it will be provided an opportunity to do any initialization at that time.
+**PasskeysRails** supports multiple different application specific models.  Whatever model name supplied when calling the `finishRegistration` endpoint will be created during a successful the `finishRegiration` process. When created, it will be provided an opportunity to do any initialization at that time.
 
-There are two **PasskeysRails** configuration options related to this: `default_class` and `class_whitelist` - see below.
+There are two **PasskeysRails** configuration options related to this: `default_class` and `class_whitelist`:
 
 #### `default_class`
 
-Configure `default_class` in `passkeys_rails.rb`.  Its value will be used during registration if none is provided in the API call.  The default value is `"User"`.  Since the `default_class` is just a default, it can be overridden in the `finishRegiration` API call to use a different model.  If no model is to be used by default, set it to nil.
+Configure `default_class` in `config/initializers/passkeys_rails.rb`.  Its value will be used during registration if none is provided in the API call.  The default value is `"User"`.  Since the `default_class` is just a default, it can be overridden in the `finishRegiration` API call to use a different model.  If no model is to be used by default, set it to nil.
 
 #### `class_whitelist`
 
-Configure `class_whitelist` in `passkeys_rails.rb`.  The default value is `nil`.  When `nil`, no whitelist will be applied. If it is non-nil, it should be an array of class names that are allowed during registration.  Supply an empty array to prevent **PasskeysRails** from attempting to create anything other than its own `PasskeysRails::Agent` during registration.
+Configure `class_whitelist` in `config/initializers/passkeys_rails.rb`.  The default value is `nil`.  When `nil`, no whitelist will be applied. If it is non-nil, it should be an array of class names that are allowed during registration.  Supply an empty array to prevent **PasskeysRails** from attempting to create anything other than its own `PasskeysRails::Agent` during registration.
 
 ## Installation
 
@@ -58,7 +76,9 @@ $ rails generate passkeys_rails:install
 
 This will add the `config/initializers/passkeys_rails.rb` configuration file, passkeys routes, and a couple of database migrations to your project.
 
-### Adding to an standard rails project
+
+<a id="rails-Integration-standard"></a>
+## Rails Integration <p><small>Adding to a standard rails project</small></p>
 
 1. Add `before_action :authenticate_passkey!`
 
@@ -72,7 +92,8 @@ This will add the `config/initializers/passkeys_rails.rb` configuration file, pa
 
  If you have one or more classes that you want to use with authentication - e.g. a User class and an AdminUser class - add `include PasskeysRails::Authenticatable` to each of those classes.  That adds a `registered?` method that you can call on your model to determine if they are registerd with your service, and a `registering_with(params)` method that you can override to initialize attributes of your model when it is created during registration. `params` is a hash with params passed to the API when registering.  When called, your object has been built, but not yet saved.  Upon return, **PasskeysRails** will attempt to save your object before finishing registration.  If it is not valid, the registration will fail as well, returning the error error details to the caller.
 
-### Adding to a Grape API rails project
+<a id="rails-Integration-grape"></a>
+## Rails Integration - <p><small>Adding to a Grape API rails project</small></p>
 
 1. Call `PasskeysRails.authenticate(request)` to authenticate the request.
 
@@ -113,11 +134,13 @@ This will add the `config/initializers/passkeys_rails.rb` configuration file, pa
 
  To access the currently authenticated entity, use `current_agent`.  If you associated the registration of the agent with one of your own models, use `current_agent.authenticatable`.  For example, if you associated the `User` class with the registration, `current_agent.authenticatable` will be a User object.
 
-### Notifications
+## Notifications
 
-Certain actions trigger notifications that can be subscribed.  See `subscribe` in `passkeys_rails.rb`.
+Certain actions trigger notifications that can be subscribed.  See `subscribe` in `config/initializers/passkeys_rails.rb`.
 
-#### Events
+These are completely optional.  **PasskeysRails** will manage all the credentials and keys without these being implemented.  They are useful for taking application specific actions like logging based on the authentication related events.
+
+### Events
 
 - `:did_register ` - a new agent has registered
 
@@ -125,7 +148,7 @@ Certain actions trigger notifications that can be subscribed.  See `subscribe` i
 
 - `:did_refresh` - an agent's auth token has been refreshed
 
-A convenient place to set these up in is in `passkeys_rails.rb`
+A convenient place to set these up in is in `config/initializers/passkeys_rails.rb`
 
 ```ruby
 PasskeysRails.config do |c|
@@ -147,10 +170,9 @@ PasskeysRails.subscribe(:did_register) do |event, agent, request|
 end
 ```
 
+## Failure Codes
 
-### Authentication Failure
-
-1. In the event of authentication failure, PasskeysRails returns an error code and message.
+1. In the event of authentication failure, **PasskeysRails** API endpoints render an error code and message.
 
 1. In a standard rails controller, the error code and message are rendered in JSON if `before_action :authenticate_passkey!` fails.
 
@@ -168,11 +190,9 @@ end
 
  In the future, the intention is to have the `.code` value stay consistent even if the `.message` changes.  This also allows you to localize the messages as need using the code.
 
-### Test Helpers
+## Testing
 
 PasskeysRails includes some test helpers for integration tests.  In order to use them, you need to include the module in your test cases/specs.
-
-### Integration tests
 
 Integration test helpers are available by including the `PasskeysRails::IntegrationHelpers` module.
 
@@ -210,9 +230,9 @@ RSpec.describe 'Posts', type: :request do
 end
 ```
 
-### Mobile Application Integration
+## Mobile Application Integration
 
-There are n groups of API endpoints that your mobile application may consume.
+There are 3 groups of API endpoints that your mobile application may consume.
 
 1. Unauthenticated (public) endpoints
 1. Authenticated (private) endpoints
@@ -223,6 +243,17 @@ There are n groups of API endpoints that your mobile application may consume.
 **Authenticated endpoints** are protected by `authenticate_passkey!` or `PasskeysRails.authenticate!(request)`.  Those methods check for and validate the `X-Auth` header, which must be set to the auth token returned in the `AuthResponse`, described below.
 
 **Passkey endpoints** are supplied by this gem and allow you to register a user, authenticate (login) a user, and refresh the token.  This section describes these endpoints.
+
+This gem supports the Passkey endpoints.
+
+### Endpoints
+
+* [POST /passkeys/challenge](post-passkeys-challenge)
+* [POST /passkeys/register](post-passkeys-register)
+* [POST /passkeys/authenticate](post-passkeys-authenticate)
+* [POST /passkeys/refresh](post-passkeys-refresh)
+* [POST /passkeys/debug_register](post-passkeys-debug-register)
+* [POST /passkeys/debug_login](post-passkeys-debug-login)
 
 All Passkey endpoints accept and respond with JSON.
 
@@ -249,7 +280,7 @@ Some endpoints return an `AuthResponse`, which has this JSON structure:
 }
 ```
 
-#### POST /passkeys/challenge
+### POST /passkeys/challenge
 
 Submit this to begin registration or authentication.
 
@@ -260,7 +291,7 @@ If the username is already in use, or anything else goes wrong, an error with co
 Omit the `username` when authenticating (logging in).
 The JSON response will be the `options_for_get` from webauthn.
 
-#### POST /passkeys/register
+### POST /passkeys/register
 
 After calling the `challenge` endpoint with a `username`, and handling its response, finish registering by calling this endpoint.
 
@@ -291,16 +322,16 @@ On **success**, the response is an `AuthResponse`.
 
 Possible **failure codes** (using the `ErrorResponse` structure) are:
 
-- webauthn_error - something is wrong with the credential
-- error - something else went wrong during credentail validation - see the `message` in the `ErrorResponse`
-- passkey_error - unable to persiste the passkey
-- invalid_authenticatable_class - the supplied authenticatable class can't be created/found (check spelling & capitalization)
-- invalid_class_whitelist - the whitelist in the passkeys_rails.rb configuration is invalid - be sure it's nil or an array
-- invalid_authenticatable_class - the supplied authenticatable class is not allowed - maybe it's not in the whitelist
-- record_invalid - the object of the supplied authenticatable class cannot be saved due to validation errors
-- agent_not_found - the agent referenced in the credential cannot be found in the database
+- `webauthn_error` - something is wrong with the credential
+- `error` - something else went wrong during credentail validation - see the `message` in the `ErrorResponse`
+- `passkey_error` - unable to persist the passkey
+- `invalid_authenticatable_class` - the supplied authenticatable class can't be created/found (check spelling & capitalization)
+- `invalid_class_whitelist` - the whitelist in the passkeys_rails.rb configuration is invalid - be sure it's nil or an array
+- `invalid_authenticatable_class` - the supplied authenticatable class is not allowed - maybe it's not in the whitelist
+- `record_invalid` - the object of the supplied authenticatable class cannot be saved due to validation errors
+- `agent_not_found` - the agent referenced in the credential cannot be found in the database
 
-#### POST /passkeys/authenticate
+### POST /passkeys/authenticate
 
 After calling the `challenge` endpoint without a `username`, and handling its response, finish authenticating by calling this endpoint.
 
@@ -325,12 +356,12 @@ On **success**, the response is an `AuthResponse`.
 
 Possible **failure codes** (using the `ErrorResponse` structure) are:
 
-- webauthn_error - something is wrong with the credential
-- passkey_not_found - the passkey referenced in the credential cannot be found in the database
+- `webauthn_error` - something is wrong with the credential
+- `passkey_not_found` - the passkey referenced in the credential cannot be found in the database
 
-#### POST /passkeys/refresh
+### POST /passkeys/refresh
 
-The token will expire after some time (configurable in passkeys_rails.rb).  Before that happens, refresh it using this API.  Once it's expired, to get a new token, use the /authentication API.
+The token will expire after some time (configurable in `config/initializers/passkeys_rails.rb`).  Before that happens, refresh it using this API.  Once it expires, to get a new token, use the `/authentication` API.
 
 Supply the following JSON structure:
 
@@ -345,15 +376,49 @@ On **success**, the response is an `AuthResponse` with a new, refreshed token.
 
 Possible **failure codes** (using the `ErrorResponse` structure) are:
 
-- invalid_token - the token data is invalid
-- expired_token - the token is expired
-- token_error - some other error ocurred when decoding the token
+- `invalid_token` - the token data is invalid
+- `expired_token` - the token is expired
+- `token_error` - some other error ocurred when decoding the token
 
-#### POST /passkeys/debug_login
+### POST /passkeys/debug_register
+
+As it may not be possible to acess Passkey functionality in mobile simulators, this endpoint may be called to register a username while bypassing the normal challenge/response sequence.
+
+This endpoint only responds if DEBUG_LOGIN_REGEX is set in the server environment.  It is **very insecure to set this variable in a production environment** as it bypasses all Passkey checks.  It is only intended to be used during mobile application development.
+
+To use this endpoint:
+
+1. Set DEBUG_LOGIN_REGEX to a regex that matches any username you want to use during development - for example `^test(-\d+)?$` will match `test`, `test-1`, `test-123`, etc.
+
+1. In the mobile application, call this endpoint in stead of the /passkeys/challenge and /passkeys/register.  The response is identicial to that of /passkeys/register.
+
+1. Use the response as if it was from /passkeys/register.
+
+If you supply a username that doesn't match the DEBUG_LOGIN_REGEX, the endpoint will respond with an error.
+
+Supply the following JSON structure:
+
+```JSON
+# POST body
+{
+  "username": String
+}
+```
+On **success**, the response is an `AuthResponse`.
+
+Possible **failure codes** (using the `ErrorResponse` structure) are:
+
+- `not_allowed` - Invalid username (the username doesn't match the regex)
+- `invalid_authenticatable_class` - the supplied authenticatable class can't be created/found (check spelling & capitalization)
+- `invalid_class_whitelist` - the whitelist in the passkeys_rails.rb configuration is invalid - be sure it's nil or an array
+- `invalid_authenticatable_class` - the supplied authenticatable class is not allowed - maybe it's not in the whitelist
+- `record_invalid` - the object of the supplied authenticatable class cannot be saved due to validation errors
+
+### POST /passkeys/debug_login
 
 As it may not be possible to acess Passkey functionality in mobile simulators, this endpoint may be called to login (authenticate) a username while bypassing the normal challenge/response sequence.
 
-This endpoint only responds if DEBUG_LOGIN_REGEX is set in the server environment.  It is very insecure to set this variable in a production environment as it bypasses all Passkey checks.  It is only intended to be used during mobile application development.
+This endpoint only responds if DEBUG_LOGIN_REGEX is set in the server environment.  It is **very insecure to set this variable in a production environment** as it bypasses all Passkey checks.  It is only intended to be used during mobile application development.
 
 To use this endpoint:
 
@@ -367,6 +432,8 @@ To use this endpoint:
 
 If you supply a username that doesn't match the DEBUG_LOGIN_REGEX, the endpoint will respond with an error.
 
+Supply the following JSON structure:
+
 ```JSON
 # POST body
 {
@@ -377,8 +444,8 @@ On **success**, the response is an `AuthResponse`.
 
 Possible **failure codes** (using the `ErrorResponse` structure) are:
 
-- not_allowed - Invalid username (the username doesn't match the regex)
-- agent_not_found - No agent found with that username
+- `not_allowed` - Invalid username (the username doesn't match the regex)
+- `agent_not_found` - No agent found with that username
 
 ## Reference/Example Mobile Applications
 
@@ -386,62 +453,15 @@ Possible **failure codes** (using the `ErrorResponse` structure) are:
 
 ## Contributing
 
-### Contributing Guidelines
+### Contribution Guidelines
 
 Thank you for considering contributing to PasskeysRails! We welcome your help to improve and enhance this project. Whether it's a bug fix, documentation update, or a new feature, your contributions are valuable to the community.
 
-To ensure a smooth collaboration, please follow the guidelines below when submitting your contributions:
+To ensure a smooth collaboration, please follow the [Contribution Guidelines](https://github.com/alliedcode/passkeys-rails/blob/main/CONTRIBUTION_GUIDELINES.md) when submitting your contributions.
 
-#### Code of Conduct
+### Code of Conduct
 
 Please note that this project follows the [Code of Conduct](https://github.com/alliedcode/passkeys-rails/blob/main/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. If you encounter any behavior that violates the code, please report it to the project maintainers.
-
-#### How to Contribute
-
-1. Fork the repository on GitHub.
-
-2. Create a new branch for your contribution. Use a descriptive name that reflects the purpose of your changes.
-
-3. Make your changes and commit them with clear and concise messages. Remember to follow the project's coding style and guidelines.
-
-4. Before submitting a pull request, ensure that your changes pass all existing tests and add relevant tests if applicable.
-
-5. Update the documentation if your changes introduce new features, modify existing behavior, or require user instructions.
-
-6. Squash your commits into a single logical commit if needed. Keep your commit history clean and focused.
-
-7. Submit a pull request against the `main` branch of the original repository.
-
-8. Add a comment at the top of the CHANGELOG.md describing the change.
-
-#### Pull Request Guidelines
-
-When submitting a pull request, please include the following details:
-
-- A clear description of the changes you made and the problem it solves.
-
-- Any relevant issue numbers that your pull request addresses or fixes.
-
-- The steps to test your changes, so the project maintainers can verify them.
-
-- Ensure that your pull request title and description are descriptive and informative.
-
-#### Code Review Process
-
-All pull requests will undergo a code review process by the project maintainers. We appreciate your patience during this review process. Constructive feedback may be provided, and further changes might be requested.
-
-#### Contributor License Agreement
-
-By submitting a pull request, you acknowledge that your contributions will be licensed under the project's [MIT License](https://github.com/alliedcode/passkeys-rails/blob/main/MIT-LICENSE).
-
-#### Reporting Issues
-
-If you encounter any bugs, problems, or have suggestions for improvement, please create an issue on the GitHub repository. Provide clear and detailed information about the issue to help us address it efficiently.
-
-#### Thank You
-
-Your contributions are valuable, and we sincerely appreciate your efforts to improve PasskeysRails. Together, we can build a better software ecosystem for the community. Thank you for your support and happy contributing!
-
 
 ## License
 
