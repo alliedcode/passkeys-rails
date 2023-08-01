@@ -45,4 +45,19 @@ PasskeysRails.config do |c|
   # for example: %w[User AdminUser]
   #
   # c.class_whitelist = nil
+
+  # To subscribe to various events in PasskeysRails, use the subscribe method.
+  # It can be called multiple times to subscribe to more than one event.
+  #
+  # Valid events:
+  #   :did_register
+  #   :did_authenticate
+  #   :did_refresh
+  #
+  # Each event will include the event name, current agent and http request.
+  #
+  # For example:
+  # c.subscribe(:did_register) do |event, agent, request|
+  #   puts("#{event} | #{agent.id} | #{request.headers}")
+  # end
 end

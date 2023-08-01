@@ -29,10 +29,11 @@ RSpec.describe PasskeysRails::PasskeysController do
         allow(PasskeysRails::FinishRegistration)
           .to receive(:call!)
           .with(interactor_context)
-          .and_return(Interactor::Context.build(username: "name", auth_token: "123"))
+          .and_return(Interactor::Context.build(username: "name", auth_token: "123", agent:))
       }
 
       it_behaves_like "a successful registration"
+      it_behaves_like "a notifier", :did_register
 
       context 'with the optional authenticatable_params' do
         let(:optional_params) { { authenticatable: } }
@@ -43,6 +44,7 @@ RSpec.describe PasskeysRails::PasskeysController do
           before { PasskeysRails.default_class = nil }
 
           it_behaves_like "a successful registration"
+          it_behaves_like "a notifier", :did_register
         end
       end
     end

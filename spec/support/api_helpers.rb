@@ -64,5 +64,24 @@ module Requests
         expect(result.message).to match(message)
       end
     end
+
+    RSpec.shared_examples 'a notifier' do |notification|
+      it 'notifies subscribers' do
+        result = {}
+
+        sub = PasskeysRails.subscribe(notification) do |name, agent, request|
+          result = { name:, agent:, request: }
+        end
+
+        call_api
+        expect_success
+
+        expect(result[:name].to_s).to eq notification.to_s
+        expect(result[:agent]).to be_a PasskeysRails::Agent
+        expect(result[:request]).to be_an ActionDispatch::Request
+
+        ActiveSupport::Notifications.unsubscribe(sub)
+      end
+    end
   end
 end

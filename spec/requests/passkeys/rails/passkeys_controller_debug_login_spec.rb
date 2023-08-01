@@ -23,11 +23,13 @@ RSpec.describe PasskeysRails::PasskeysController do
       let(:required_params) { { username: 'adam-123' } }
 
       context 'with valid parameters and a successfull call to DebugLogin' do
-        it 'Succeeds and returns instance credentails' do
+        before {
           allow(PasskeysRails::DebugLogin)
             .to receive(:call!)
-            .and_return(Interactor::Context.build(username: "adam-123", auth_token: "456"))
+            .and_return(Interactor::Context.build(username: "adam-123", auth_token: "456", agent: create(:agent)))
+        }
 
+        it 'Succeeds and returns instance credentails' do
           call_api
 
           expect_success
@@ -35,6 +37,8 @@ RSpec.describe PasskeysRails::PasskeysController do
           expect(json.keys).to match_array %w[username auth_token]
           expect(json).to include(username: "adam-123", auth_token: "456")
         end
+
+        it_behaves_like "a notifier", :did_authenticate
       end
     end
   end

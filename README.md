@@ -56,7 +56,7 @@ Finally, execute:
 $ rails generate passkeys_rails:install
 ```
 
-This will add the `passkeys_rails.rb` configuration file, passkeys routes, and a couple of database migrations to your project.
+This will add the `config/initializers/passkeys_rails.rb` configuration file, passkeys routes, and a couple of database migrations to your project.
 
 ### Adding to an standard rails project
 
@@ -112,6 +112,41 @@ This will add the `passkeys_rails.rb` configuration file, passkeys routes, and a
 1. Use `current_agent` and `current_agent.authenticatable`
 
  To access the currently authenticated entity, use `current_agent`.  If you associated the registration of the agent with one of your own models, use `current_agent.authenticatable`.  For example, if you associated the `User` class with the registration, `current_agent.authenticatable` will be a User object.
+
+### Notifications
+
+Certain actions trigger notifications that can be subscribed.  See `subscribe` in `passkeys_rails.rb`.
+
+#### Events
+
+- `:did_register ` - a new agent has registered
+
+- `:did_authenticate` - an agent has been authenticated
+
+- `:did_refresh` - an agent's auth token has been refreshed
+
+A convenient place to set these up in is in `passkeys_rails.rb`
+
+```ruby
+PasskeysRails.config do |c|
+  c.subscribe(:did_register) do |event, agent, request|
+    # do something with the agent and/or request
+  end
+
+  c.subscribe(:did_authenticate) do |event, agent, request|
+    # do something with the agent and/or request
+  end
+end
+```
+
+Subscriptions can also be done elsewhere as subscribe is a PasskeysRails class method.
+
+```ruby
+PasskeysRails.subscribe(:did_register) do |event, agent, request|
+  # do something with the agent and/or request
+end
+```
+
 
 ### Authentication Failure
 

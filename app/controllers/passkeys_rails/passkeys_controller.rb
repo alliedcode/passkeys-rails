@@ -18,6 +18,8 @@ module PasskeysRails
                                                        username: session.dig(:passkeys_rails, :username),
                                                        challenge: session.dig(:passkeys_rails, :challenge))
 
+      broadcast(:did_register, agent: result.agent)
+
       render json: auth_response(result)
     end
 
@@ -25,11 +27,16 @@ module PasskeysRails
       result = PasskeysRails::FinishAuthentication.call!(credential: authentication_params.to_h,
                                                          challenge: session.dig(:passkeys_rails, :challenge))
 
+      broadcast(:did_authenticate, agent: result.agent)
+
       render json: auth_response(result)
     end
 
     def refresh
       result = PasskeysRails::RefreshToken.call!(token: refresh_params[:auth_token])
+
+      broadcast(:did_refresh, agent: result.agent)
+
       render json: auth_response(result)
     end
 
@@ -39,6 +46,9 @@ module PasskeysRails
     # CAUTION: It is very insecure to set DEBUG_LOGIN_REGEX in a production environment.
     def debug_login
       result = PasskeysRails::DebugLogin.call!(username: debug_login_params[:username])
+
+      broadcast(:did_authenticate, agent: result.agent)
+
       render json: auth_response(result)
     end
 
@@ -49,6 +59,9 @@ module PasskeysRails
     def debug_register
       result = PasskeysRails::DebugRegister.call!(username: debug_login_params[:username],
                                                   authenticatable_info: authenticatable_params&.to_h)
+
+      broadcast(:did_register, agent: result.agent)
+
       render json: auth_response(result)
     end
 
@@ -87,6 +100,10 @@ module PasskeysRails
     def debug_login_params
       params.require(:username)
       params.permit(:username)
+    end
+
+    def broadcast(event_name, agent:)
+      ActiveSupport::Notifications.instrument("passkeys_rails.#{event_name}", { agent:, request: })
     end
   end
 end

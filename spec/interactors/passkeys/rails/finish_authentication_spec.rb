@@ -19,12 +19,13 @@ RSpec.describe PasskeysRails::FinishAuthentication do
           allow(assertion_credential).to receive(:verify).with(original_challenge, public_key: passkey.public_key, sign_count: passkey.sign_count)
         end
 
-        it "returns the username and auth token" do
+        it "returns the username, auth token, and agent" do
           expect {
             result = call
             expect(result).to be_success
             expect(result.username).to eq passkey.agent.username
             expect(result.auth_token).to be_present
+            expect(result.agent).to be_a PasskeysRails::Agent
           }
           .to change { passkey.reload.agent.last_authenticated_at }
         end

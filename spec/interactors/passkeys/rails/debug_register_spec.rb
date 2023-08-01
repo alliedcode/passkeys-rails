@@ -15,6 +15,8 @@ RSpec.describe PasskeysRails::DebugRegister do
           expect(result).to be_success
           expect(result.username).to eq username
           expect(result.auth_token).to be_present
+          expect(result.agent).to be_a PasskeysRails::Agent
+
           expect(resulting_agent).to be_present
         }
         .to change { PasskeysRails::Agent.registered.count }.by(1)

@@ -30,6 +30,7 @@ RSpec.describe PasskeysRails::DebugLogin do
             expect(result).to be_success
             expect(result.username).to eq agent.username
             expect(result.auth_token).to be_present
+            expect(result.agent).to be_a PasskeysRails::Agent
           end
         end
 

@@ -8,6 +8,7 @@ RSpec.describe PasskeysRails::FinishRegistration do
         expect(result).to be_success
         expect(result.username).to eq username
         expect(result.auth_token).to be_present
+        expect(result.agent).to be_a PasskeysRails::Agent
       }
       .to change { agent.reload.registered_at }.from(nil)
       .and change { agent.reload.registered? }.to(true)

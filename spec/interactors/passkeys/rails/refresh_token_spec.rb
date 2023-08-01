@@ -12,6 +12,7 @@ RSpec.describe PasskeysRails::RefreshToken do
 
       token = result.auth_token
       expect(token).to be_a String
+      expect(result.agent).to be_a PasskeysRails::Agent
 
       payload, = JWT.decode(token, PasskeysRails.auth_token_secret, true, { algorithm: PasskeysRails.auth_token_algorithm })
 

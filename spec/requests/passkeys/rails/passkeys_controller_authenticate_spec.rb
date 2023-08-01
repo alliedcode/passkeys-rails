@@ -12,11 +12,13 @@ RSpec.describe PasskeysRails::PasskeysController do
     context 'with valid parameters and a successfull call to FinishAuthentication' do
       let(:agent) { create(:agent) }
 
-      it 'Succeeds and returns instance credentails' do
+      before {
         allow(PasskeysRails::FinishAuthentication)
           .to receive(:call!)
-          .and_return(Interactor::Context.build(username: "name", auth_token: "123"))
+          .and_return(Interactor::Context.build(username: "name", auth_token: "123", agent:))
+      }
 
+      it 'Succeeds and returns instance credentails' do
         call_api
 
         expect_success
@@ -24,6 +26,8 @@ RSpec.describe PasskeysRails::PasskeysController do
         expect(json.keys).to match_array %w[username auth_token]
         expect(json).to include(username: "name", auth_token: "123")
       end
+
+      it_behaves_like "a notifier", :did_authenticate
     end
 
     describe "Unexpected exceptions" do

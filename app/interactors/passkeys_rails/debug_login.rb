@@ -13,6 +13,7 @@ module PasskeysRails
       ensure_debug_mode
       ensure_regex_match
 
+      context.agent = agent
       context.username = agent.username
       context.auth_token = GenerateAuthToken.call!(agent:).auth_token
     rescue Interactor::Failure => e

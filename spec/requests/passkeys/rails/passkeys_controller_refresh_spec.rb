@@ -9,13 +9,15 @@ RSpec.describe PasskeysRails::PasskeysController do
     let(:required_params) { { auth_token: "123" } }
 
     context 'with valid parameters and a successfull call to RefreshToken' do
+      before {
+        allow(PasskeysRails::RefreshToken)
+          .to receive(:call!)
+          .and_return(Interactor::Context.build(username: "name", auth_token: "123", agent:))
+      }
+
       let(:agent) { create(:agent) }
 
       it 'Succeeds and returns instance credentails' do
-        allow(PasskeysRails::RefreshToken)
-          .to receive(:call!)
-          .and_return(Interactor::Context.build(username: "name", auth_token: "123"))
-
         call_api
 
         expect_success
@@ -23,6 +25,8 @@ RSpec.describe PasskeysRails::PasskeysController do
         expect(json.keys).to match_array %w[username auth_token]
         expect(json).to include(username: "name", auth_token: "123")
       end
+
+      it_behaves_like "a notifier", :did_refresh
     end
   end
 end

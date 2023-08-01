@@ -45,6 +45,26 @@ module PasskeysRails
   # for example: %w[User AdminUser]
   mattr_accessor :class_whitelist, default: nil
 
+  # Convenience method to subscribe to various events in PasskeysRails.
+  #
+  # Valid events:
+  #   :did_register
+  #   :did_authenticate
+  #   :did_refresh
+  #
+  # Each event will include the event name, current agent and http request.
+  # For example:
+  #
+  # subscribe(:did_register) do |event, agent, request|
+  #   # do something with the agent and/or request
+  # end
+  #
+  def self.subscribe(event_name)
+    ActiveSupport::Notifications.subscribe("passkeys_rails.#{event_name}") do |name, _start, _finish, _id, payload|
+      yield(name.gsub(/^passkeys_rails\./, ''), payload[:agent], payload[:request]) if block_given?
+    end
+  end
+
   # This is only used by the debug_login endpoint.
   # CAUTION: It is very insecure to set DEBUG_LOGIN_REGEX in a production environment.
   def self.debug_login_regex

@@ -8,6 +8,7 @@ module PasskeysRails
     def call
       verify_credential!
 
+      context.agent = agent
       context.username = agent.username
       context.auth_token = GenerateAuthToken.call!(agent:).auth_token
     rescue Interactor::Failure => e

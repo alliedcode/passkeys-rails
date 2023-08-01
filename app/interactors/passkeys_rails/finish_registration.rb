@@ -14,6 +14,7 @@ module PasskeysRails
         create_authenticatable! if aux_class_name.present?
       end
 
+      context.agent = agent
       context.username = agent.username
       context.auth_token = GenerateAuthToken.call!(agent:).auth_token
     rescue Interactor::Failure => e
