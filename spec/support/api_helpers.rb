@@ -36,8 +36,10 @@ module Requests
     end
 
     def error_fields
+      return unless json.is_a?(Hash)
+
       fields = json.dig(:error, :fields)
-      expect(fields.be_a(Hash)).to be_truthy if fields
+      expect(fields).to be_a(Hash) if fields
       fields
     end
 
