@@ -449,7 +449,9 @@ Possible **failure codes** (using the `ErrorResponse` structure) are:
 
 ## Reference/Example Mobile Applications
 
-**TODO**: Point to the soon-to-be-created reference mobile applications for how to use **passkeys-rails** for passkey authentication.
+There is a sample iOS app that integrates with **passkeys-rails** based server implementations.  It's a great place to get a quick start on implementing passkyes in your iOS, iPadOS or MacOS apps.
+
+Check out the [PasskeysRailsDemo](https://github.com/alliedcode/PasskeysRailsDemo) app.
 
 ## Contributing
 
