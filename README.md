@@ -54,7 +54,7 @@ Configure `class_whitelist` in `config/initializers/passkeys_rails.rb`.  The def
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "passkeys_rails"
+gem "passkeys-rails"
 ```
 
 And then execute:
