@@ -15,8 +15,8 @@ module PasskeysRails
     def register
       result = PasskeysRails::FinishRegistration.call!(credential: attestation_credential_params.to_h,
                                                        authenticatable_info: authenticatable_params&.to_h,
-                                                       username: session.dig(:passkeys_rails, :username),
-                                                       challenge: session.dig(:passkeys_rails, :challenge))
+                                                       username: session.dig("passkeys_rails", "username"),
+                                                       challenge: session.dig("passkeys_rails", "challenge"))
 
       broadcast(:did_register, agent: result.agent)
 
@@ -25,7 +25,7 @@ module PasskeysRails
 
     def authenticate
       result = PasskeysRails::FinishAuthentication.call!(credential: authentication_params.to_h,
-                                                         challenge: session.dig(:passkeys_rails, :challenge))
+                                                         challenge: session.dig("passkeys_rails", "challenge"))
 
       broadcast(:did_authenticate, agent: result.agent)
 
