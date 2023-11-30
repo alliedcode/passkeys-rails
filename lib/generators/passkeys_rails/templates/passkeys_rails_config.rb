@@ -61,11 +61,9 @@ PasskeysRails.config do |c|
   #   puts("#{event} | #{agent.id} | #{request.headers}")
   # end
 
-
   # PasskeysRails uses webauthn to help with the protocol.
   # The following settings are passed throught webauthn.
   # wa_origin is the only one requried
-
 
   # This value needs to match `window.location.origin` evaluated by
   # the User Agent during registration and authentication ceremonies.
