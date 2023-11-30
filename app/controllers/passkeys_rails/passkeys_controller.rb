@@ -7,7 +7,7 @@ module PasskeysRails
       result = PasskeysRails::BeginChallenge.call!(username: challenge_params[:username])
 
       # Store the challenge so we can verify the future register or authentication request
-      session[:passkeys_rails] = result.session_data
+      cookies[:passkeys_rails] = result.session_data
 
       render json: result.response.as_json
     end
