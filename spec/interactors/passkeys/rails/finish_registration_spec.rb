@@ -45,6 +45,16 @@ RSpec.describe PasskeysRails::FinishRegistration do
     let(:original_challenge) { "CHALLENGE" }
     let(:credential_identifier) { "SOME ID" }
 
+    context "when the creedential doesn't verify because the origin is not set" do
+      before {
+        attestation_credential = instance_double(WebAuthn::PublicKeyCredentialWithAttestation, id: credential_identifier, public_key: 'pk', sign_count: 0)
+        allow(WebAuthn::Credential).to receive(:from_create).with(credential).and_return(attestation_credential)
+        allow(attestation_credential).to receive(:verify).with(original_challenge).and_raise(StandardError.new("undefined method `end_with?' for nil:NilClass"))
+      }
+
+      it_behaves_like "a failing call", :webauthn_error, "origin is not set"
+    end
+
     context "when the credential doesn't verify" do
       before {
         attestation_credential = instance_double(WebAuthn::PublicKeyCredentialWithAttestation, id: credential_identifier, public_key: 'pk', sign_count: 0)
@@ -77,7 +87,7 @@ RSpec.describe PasskeysRails::FinishRegistration do
 
         context "when the authenticatable_class is not supplied" do
           context "when the default_class is nil" do
-            before { PasskeysRails.default_class = nil }
+            before { PasskeysRails.config.default_class = nil }
 
             it_behaves_like "a successful call", "Some User"
 
@@ -89,10 +99,10 @@ RSpec.describe PasskeysRails::FinishRegistration do
           end
 
           context "when the default_class is User" do
-            before { PasskeysRails.default_class = "User" }
+            before { PasskeysRails.config.default_class = "User" }
 
             context "when the class_whitelist is nil" do
-              before { PasskeysRails.class_whitelist = nil }
+              before { PasskeysRails.config.class_whitelist = nil }
 
               it_behaves_like "a successful call", "Some User"
               it_behaves_like "a user creator"
@@ -106,26 +116,26 @@ RSpec.describe PasskeysRails::FinishRegistration do
             end
 
             context "when the class_whitelist is an empty array" do
-              before { PasskeysRails.class_whitelist = [] }
+              before { PasskeysRails.config.class_whitelist = [] }
 
               it_behaves_like "a failing call", :invalid_authenticatable_class, "authenticatable_class (User) is not in the whitelist"
             end
 
             context "when the class_whitelist is an array, but User is not in it" do
-              before { PasskeysRails.class_whitelist = %w[Account AdminUser] }
+              before { PasskeysRails.config.class_whitelist = %w[Account AdminUser] }
 
               it_behaves_like "a failing call", :invalid_authenticatable_class, "authenticatable_class (User) is not in the whitelist"
             end
 
             context "when the class_whitelist includes User" do
-              before { PasskeysRails.class_whitelist = %w[Account User AdminUser] }
+              before { PasskeysRails.config.class_whitelist = %w[Account User AdminUser] }
 
               it_behaves_like "a successful call", "Some User"
               it_behaves_like "a user creator"
             end
 
             context "when the class_whitelist is a string (invalid)" do
-              before { PasskeysRails.class_whitelist = "invalid" }
+              before { PasskeysRails.config.class_whitelist = "invalid" }
 
               it_behaves_like "a failing call", :invalid_class_whitelist, "class_whitelist is invalid.  It should be nil or an array of zero or more class names."
             end
@@ -135,15 +145,15 @@ RSpec.describe PasskeysRails::FinishRegistration do
         context "when the authenticatable_class is a valid class" do
           let(:authenticatable_class) { "User" }
 
-          context "when PasskeysRails.default_class is nil" do
-            before { PasskeysRails.default_class = nil }
+          context "when PasskeysRails.config.default_class is nil" do
+            before { PasskeysRails.config.default_class = nil }
 
             it_behaves_like "a successful call", "Some User"
             it_behaves_like "a user creator"
           end
 
-          context "when PasskeysRails.default_class is a different valid class" do
-            before { PasskeysRails.default_class = "Contact" }
+          context "when PasskeysRails.config.default_class is a different valid class" do
+            before { PasskeysRails.config.default_class = "Contact" }
 
             it_behaves_like "a successful call", "Some User"
             it_behaves_like "a user creator"
@@ -177,7 +187,7 @@ RSpec.describe PasskeysRails::FinishRegistration do
       context "when the username doesn't match any agents" do
         let(:username) { "somebody else" }
 
-        it_behaves_like "a failing call", :agent_not_found, "Agent not found for session value: \"somebody else\""
+        it_behaves_like "a failing call", :agent_not_found, "Agent not found for cookie value: \"somebody else\""
       end
     end
   end

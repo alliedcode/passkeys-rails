@@ -232,13 +232,20 @@ end
 
 ## Mobile Application Integration
 
+### Prerequisites
+
+For iOS, you need to associate your app with your server.  This amounts to setting up a special file on your server that defines the association.  See [setup your apple-app-site-association](#Ensure-`.well-known/apple-app-site-association`-is-in-place)
+
+
+### Mobile API Endpoints
+
 There are 3 groups of API endpoints that your mobile application may consume.
 
 1. Unauthenticated (public) endpoints
 1. Authenticated (private) endpoints
 1. Passey endpoints (for supporting authentication)
 
-**Unauthenticated endpoints** can be consumed without and authentication.
+**Unauthenticated endpoints** can be consumed without any authentication.
 
 **Authenticated endpoints** are protected by `authenticate_passkey!` or `PasskeysRails.authenticate!(request)`.  Those methods check for and validate the `X-Auth` header, which must be set to the auth token returned in the `AuthResponse`, described below.
 

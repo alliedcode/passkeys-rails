@@ -1,3 +1,10 @@
+### 0.3.1
+
+* Fixed a bug in reading session/cookie variables
+* Added webauthn configuration parameters to this gem's configuration
+* Moved configuration to its own class
+* Added more info to the README
+
 ### 0.3.0
 
 * Added debug_register endpoint.

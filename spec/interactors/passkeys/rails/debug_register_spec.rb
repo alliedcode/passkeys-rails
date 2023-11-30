@@ -90,43 +90,43 @@ RSpec.describe PasskeysRails::DebugRegister do
             let(:authenticatable_info) { nil }
 
             context "when the default_class is nil" do
-              before { PasskeysRails.default_class = nil }
+              before { PasskeysRails.config.default_class = nil }
 
               it_behaves_like "a successful call", "adam-123"
               it_behaves_like "only an agent creator"
             end
 
             context "when the default_class is User" do
-              before { PasskeysRails.default_class = "User" }
+              before { PasskeysRails.config.default_class = "User" }
 
               context "when the class_whitelist is nil" do
-                before { PasskeysRails.class_whitelist = nil }
+                before { PasskeysRails.config.class_whitelist = nil }
 
                 it_behaves_like "a successful call", "adam-123"
                 it_behaves_like "a related user creator"
               end
 
               context "when the class_whitelist is an empty array" do
-                before { PasskeysRails.class_whitelist = [] }
+                before { PasskeysRails.config.class_whitelist = [] }
 
                 it_behaves_like "a failing call", :invalid_authenticatable_class, "authenticatable_class (User) is not in the whitelist"
               end
 
               context "when the class_whitelist is an array, but User is not in it" do
-                before { PasskeysRails.class_whitelist = %w[Account AdminUser] }
+                before { PasskeysRails.config.class_whitelist = %w[Account AdminUser] }
 
                 it_behaves_like "a failing call", :invalid_authenticatable_class, "authenticatable_class (User) is not in the whitelist"
               end
 
               context "when the class_whitelist includes User" do
-                before { PasskeysRails.class_whitelist = %w[Account User AdminUser] }
+                before { PasskeysRails.config.class_whitelist = %w[Account User AdminUser] }
 
                 it_behaves_like "a successful call", "adam-123"
                 it_behaves_like "a related user creator"
               end
 
               context "when the class_whitelist is a string (invalid)" do
-                before { PasskeysRails.class_whitelist = "invalid" }
+                before { PasskeysRails.config.class_whitelist = "invalid" }
 
                 it_behaves_like "a failing call", :invalid_class_whitelist, "class_whitelist is invalid.  It should be nil or an array of zero or more class names."
               end

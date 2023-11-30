@@ -28,7 +28,11 @@ module PasskeysRails
     rescue WebAuthn::Error => e
       context.fail!(code: :webauthn_error, message: e.message)
     rescue StandardError => e
-      context.fail!(code: :error, message: e.message)
+      if e.message == "undefined method `end_with?' for nil:NilClass"
+        context.fail!(code: :webauthn_error, message: "origin is not set")
+      else
+        context.fail!(code: :error, message: e.message)
+      end
     end
 
     def store_passkey_and_register_agent!
@@ -51,7 +55,7 @@ module PasskeysRails
     def agent
       @agent ||= begin
         agent = Agent.find_by(username:)
-        context.fail!(code: :agent_not_found, message: "Agent not found for session value: \"#{username}\"") if agent.blank?
+        context.fail!(code: :agent_not_found, message: "Agent not found for cookie value: \"#{username}\"") if agent.blank?
 
         agent
       end

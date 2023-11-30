@@ -7,16 +7,17 @@ module PasskeysRails
       result = PasskeysRails::BeginChallenge.call!(username: challenge_params[:username])
 
       # Store the challenge so we can verify the future register or authentication request
-      cookies[:passkeys_rails] = result.session_data
+      cookies[:passkeys_rails] = result.cookie_data
 
       render json: result.response.as_json
     end
 
     def register
+      cookie_data = cookies["passkeys_rails"] || {}
       result = PasskeysRails::FinishRegistration.call!(credential: attestation_credential_params.to_h,
                                                        authenticatable_info: authenticatable_params&.to_h,
-                                                       username: session.dig("passkeys_rails", "username"),
-                                                       challenge: session.dig("passkeys_rails", "challenge"))
+                                                       username: cookie_data["username"],
+                                                       challenge: cookie_data["challenge"])
 
       broadcast(:did_register, agent: result.agent)
 
@@ -24,8 +25,9 @@ module PasskeysRails
     end
 
     def authenticate
+      cookie_data = cookies["passkeys_rails"] || {}
       result = PasskeysRails::FinishAuthentication.call!(credential: authentication_params.to_h,
-                                                         challenge: session.dig("passkeys_rails", "challenge"))
+                                                         challenge: cookie_data["challenge"])
 
       broadcast(:did_authenticate, agent: result.agent)
 

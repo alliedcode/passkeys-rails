@@ -51,14 +51,13 @@ RSpec.configure do |config|
   # infer FactoryBot as the base of :create & :build calls
   config.include FactoryBot::Syntax::Methods
 
-  # Restore defaults so specs change them without affecting others
+  # Restore defaults so specs can change them without affecting others
   config.after {
-    PasskeysRails.config do |c|
-      c.auth_token_secret = Rails.application.secret_key_base
-      c.auth_token_algorithm = "HS256"
-      c.auth_token_expires_in = 30.days
-      c.default_class = "User"
-      c.class_whitelist = nil
-    end
+    PasskeysRails.config.auth_token_secret = Rails.application.secret_key_base
+    PasskeysRails.config.auth_token_algorithm = "HS256"
+    PasskeysRails.config.auth_token_expires_in = 30.days
+    PasskeysRails.config.default_class = "User"
+    PasskeysRails.config.class_whitelist = nil
+    WebAuthn.configuration.origin = "http://localhost:3000"
   }
 end

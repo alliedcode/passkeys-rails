@@ -27,26 +27,34 @@ RSpec.describe PasskeysRails::BeginRegistration do
   context "with all parameters" do
     let(:username) { "alice" }
 
-    context "when there are no Agents with the username" do
-      it_behaves_like "an agent creator"
+    context "without an origin set" do
+      before { WebAuthn.configuration.origin = nil }
+
+      it_behaves_like "a failing call", :origin_error, "config.wa_origin must be set"
     end
 
-    context "when there is already an unregistered Agent with the username" do
-      let(:username) { create(:agent, :unregistered).username }
+    context "with an origin set" do
+      context "when there are no Agents with the username" do
+        it_behaves_like "an agent creator"
+      end
 
-      it_behaves_like "an agent creator"
-    end
+      context "when there is already an unregistered Agent with the username" do
+        let(:username) { create(:agent, :unregistered).username }
 
-    context "when there is already a registered Agent with the username" do
-      let(:username) { create(:agent, :registered).username }
+        it_behaves_like "an agent creator"
+      end
 
-      it_behaves_like "a failing call", :validation_errors, "Username has already been taken"
-    end
+      context "when there is already a registered Agent with the username" do
+        let(:username) { create(:agent, :registered).username }
 
-    context "when the username is empty" do
-      let(:username) { "" }
+        it_behaves_like "a failing call", :validation_errors, "Username has already been taken"
+      end
 
-      it_behaves_like "a failing call", :validation_errors, "Username can't be blank"
+      context "when the username is empty" do
+        let(:username) { "" }
+
+        it_behaves_like "a failing call", :validation_errors, "Username can't be blank"
+      end
     end
   end
 end

@@ -3,49 +3,8 @@ RSpec.describe PasskeysRails do
     expect(PasskeysRails::VERSION).not_to be_nil
   end
 
-  it "allows customization auth_token_expires_in" do
-    new_value = 1.week
-
-    expect { described_class.auth_token_expires_in = new_value }
-      .to change { described_class.auth_token_expires_in }
-      .to(new_value)
-  end
-
-  it "allows customization auth_token_algorithm" do
-    expect { described_class.auth_token_algorithm = "MY ALGORITHM" }
-      .to change { described_class.auth_token_algorithm }
-      .from("HS256")
-      .to("MY ALGORITHM")
-  end
-
-  it "allows customization auth_token_secret" do
-    expect { described_class.auth_token_secret = "MY SECRET" }
-      .to change { described_class.auth_token_secret }
-      .from(Rails.application.secret_key_base)
-      .to("MY SECRET")
-  end
-
-  it "allows customization default_class" do
-    expect { described_class.default_class = "AdminUser" }
-      .to change { described_class.default_class }
-      .from("User")
-      .to("AdminUser")
-  end
-
-  it "allows customization class_whitelist" do
-    expect { described_class.class_whitelist = %w[User AdminUser] }
-      .to change { described_class.class_whitelist }
-      .from(nil)
-      .to match_array(%w[User AdminUser])
-  end
-
-  it "allows customization of debug_login_regex" do
-    saved_value = ENV.fetch('DEBUG_LOGIN_REGEX', nil)
-    ENV['DEBUG_LOGIN_REGEX'] = "TESTING"
-
-    expect(described_class.debug_login_regex).to eq(/TESTING/)
-
-    ENV['DEBUG_LOGIN_REGEX'] = saved_value
+  it "doesn't require a configuration block to have the default configuration" do
+    expect(described_class.auth_token_algorithm).to eq "HS256"
   end
 
   context "with some valid and invalid auth tokens and requests" do

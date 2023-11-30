@@ -41,7 +41,7 @@ RSpec.describe PasskeysRails::PasskeysController do
         let(:authenticatable_info) { authenticatable }
 
         context "when PasskeysRails.default_class is nil" do
-          before { PasskeysRails.default_class = nil }
+          before { PasskeysRails.config.default_class = nil }
 
           it_behaves_like "a successful registration"
           it_behaves_like "a notifier", :did_register

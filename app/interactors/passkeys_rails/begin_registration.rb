@@ -13,6 +13,8 @@ module PasskeysRails
     private
 
     def create_or_replace_unregistered_agent
+      context.fail! code: :origin_error, message: "config.wa_origin must be set" if WebAuthn.configuration.origin.blank?
+
       Agent.unregistered.where(username:).destroy_all
 
       agent = Agent.create(username:, webauthn_identifier: WebAuthn.generate_user_id)

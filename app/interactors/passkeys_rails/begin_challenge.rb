@@ -10,7 +10,7 @@ module PasskeysRails
       options = result.options
 
       context.response = options
-      context.session_data = session_data(options)
+      context.cookie_data = cookie_data(options)
     rescue Interactor::Failure => e
       context.fail! code: e.context.code, message: e.context.message
     end
@@ -25,7 +25,7 @@ module PasskeysRails
       end
     end
 
-    def session_data(options)
+    def cookie_data(options)
       {
         username:,
         challenge: WebAuthn.standard_encoder.encode(options.challenge)

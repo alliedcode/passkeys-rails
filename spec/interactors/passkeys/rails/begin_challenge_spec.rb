@@ -24,8 +24,8 @@ RSpec.describe PasskeysRails::BeginChallenge do
 
         result = call
         expect(result).to be_success
-        expect(result.session_data[:username]).to be_nil
-        expect(result.session_data[:challenge]).to eq "ENCODED CHALLENGE"
+        expect(result.cookie_data[:username]).to be_nil
+        expect(result.cookie_data[:challenge]).to eq "ENCODED CHALLENGE"
         expect(result.response).to eq options
       end
     end
@@ -47,8 +47,8 @@ RSpec.describe PasskeysRails::BeginChallenge do
 
         result = call
         expect(result).to be_success
-        expect(result.session_data[:username]).to eq username
-        expect(result.session_data[:challenge]).to eq "ENCODED CHALLENGE"
+        expect(result.cookie_data[:username]).to eq username
+        expect(result.cookie_data[:challenge]).to eq "ENCODED CHALLENGE"
         expect(result.response).to eq options
       end
     end
