@@ -188,7 +188,7 @@ end
  - When `.code` is `:expired_token`, `.message` is **The token has expired**, which means that the token is valid, but expired, thuis it's not considered authentic.
  - When `.code` is `:token_error`, `.message` is a description of the error.  This is a catch-all in the event we are unable to decode the token.
 
- In the future, the intention is to have the `.code` value stay consistent even if the `.message` changes.  This also allows you to localize the messages as need using the code.
+ In the future, the intention is to have the `.code` value stay consistent even if the `.message` changes.  This also allows you to localize the messages as needed using the code.
 
 ## Testing
 
@@ -239,11 +239,11 @@ For iOS, you need to associate your app with your server.  This amounts to setti
 
 ### Mobile API Endpoints
 
-There are 3 groups of API endpoints that your mobile application may consume.
+There are 3 groups of API endpoints that your mobile application might consume.
 
 1. Unauthenticated (public) endpoints
 1. Authenticated (private) endpoints
-1. Passey endpoints (for supporting authentication)
+1. Passkey endpoints (for supporting authentication)
 
 **Unauthenticated endpoints** can be consumed without any authentication.
 
@@ -253,7 +253,7 @@ There are 3 groups of API endpoints that your mobile application may consume.
 
 This gem supports the Passkey endpoints.
 
-### Endpoints
+### Passkey Endpoints
 
 * [POST /passkeys/challenge](post-passkeys-challenge)
 * [POST /passkeys/register](post-passkeys-register)
@@ -291,12 +291,18 @@ Some endpoints return an `AuthResponse`, which has this JSON structure:
 
 Submit this to begin registration or authentication.
 
-Supply a `{ "username": "unique username" } ` to register a new credential.
+#### Registration (register)
+
+To begin registration of a new credential, supply a `{ "username": "unique username" }`.
 If all goes well, the JSON response will be the `options_for_create` from webauthn.
 If the username is already in use, or anything else goes wrong, an error with code `validation_errors` will be returned.
 
-Omit the `username` when authenticating (logging in).
-The JSON response will be the `options_for_get` from webauthn.
+After receiving a successful response, follow up with a POST to `/passkeys/register`, below.
+
+#### Authentication (login)
+To begin authenticating an existing credential, omit the `username`.  The JSON response will be the `options_for_get` from webauthn.
+
+After receiving a successful response, follow up with a POST to `/passkeys/authenticate`, below.
 
 ### POST /passkeys/register
 
@@ -391,17 +397,17 @@ Possible **failure codes** (using the `ErrorResponse` structure) are:
 
 As it may not be possible to acess Passkey functionality in mobile simulators, this endpoint may be called to register a username while bypassing the normal challenge/response sequence.
 
-This endpoint only responds if DEBUG_LOGIN_REGEX is set in the server environment.  It is **very insecure to set this variable in a production environment** as it bypasses all Passkey checks.  It is only intended to be used during mobile application development.
+This endpoint only responds if `DEBUG_LOGIN_REGEX` is set in the server environment.  It is **very insecure to set this variable in a production environment** as it bypasses all Passkey checks.  It is only intended to be used during mobile application development.
 
 To use this endpoint:
 
-1. Set DEBUG_LOGIN_REGEX to a regex that matches any username you want to use during development - for example `^test(-\d+)?$` will match `test`, `test-1`, `test-123`, etc.
+1. Set `DEBUG_LOGIN_REGEX` to a regex that matches any username you want to use during development - for example `^test(-\d+)?$` will match `test`, `test-1`, `test-123`, etc.
 
-1. In the mobile application, call this endpoint in stead of the /passkeys/challenge and /passkeys/register.  The response is identicial to that of /passkeys/register.
+1. In the mobile application, call this endpoint in stead of the `/passkeys/challenge` and `/passkeys/register`.  The response is identicial to that of `/passkeys/register`.
 
-1. Use the response as if it was from /passkeys/register.
+1. Use the response as if it was from `/passkeys/register`.
 
-If you supply a username that doesn't match the DEBUG_LOGIN_REGEX, the endpoint will respond with an error.
+If you supply a username that doesn't match the `DEBUG_LOGIN_REGEX`, the endpoint will respond with an error.
 
 Supply the following JSON structure:
 
@@ -425,19 +431,19 @@ Possible **failure codes** (using the `ErrorResponse` structure) are:
 
 As it may not be possible to acess Passkey functionality in mobile simulators, this endpoint may be called to login (authenticate) a username while bypassing the normal challenge/response sequence.
 
-This endpoint only responds if DEBUG_LOGIN_REGEX is set in the server environment.  It is **very insecure to set this variable in a production environment** as it bypasses all Passkey checks.  It is only intended to be used during mobile application development.
+This endpoint only responds if `DEBUG_LOGIN_REGEX` is set in the server environment.  It is **very insecure to set this variable in a production environment** as it bypasses all Passkey checks.  It is only intended to be used during mobile application development.
 
 To use this endpoint:
 
 1. Manually create one or more PasskeysRails::Agent records in the database.  A unique username is required for each.
 
-1. Set DEBUG_LOGIN_REGEX to a regex that matches any username you want to use during development - for example `^test(-\d+)?$` will match `test`, `test-1`, `test-123`, etc.
+1. Set `DEBUG_LOGIN_REGEX` to a regex that matches any username you want to use during development - for example `^test(-\d+)?$` will match `test`, `test-1`, `test-123`, etc.
 
-1. In the mobile application, call this endpoint in stead of the /passkeys/challenge and /passkeys/authenticate.  The response is identicial to that of /passkeys/authenticate.
+1. In the mobile application, call this endpoint in stead of the `/passkeys/challenge` and `/passkeys/authenticate`.  The response is identicial to that of `/passkeys/authenticate`.
 
-1. Use the response as if it was from /passkeys/authenticate.
+1. Use the response as if it was from `/passkeys/authenticate`.
 
-If you supply a username that doesn't match the DEBUG_LOGIN_REGEX, the endpoint will respond with an error.
+If you supply a username that doesn't match the `DEBUG_LOGIN_REGEX`, the endpoint will respond with an error.
 
 Supply the following JSON structure:
 
