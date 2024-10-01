@@ -2,6 +2,9 @@ require:
   - rubocop-rails
   - rubocop-performance
   - rubocop-rspec
+  - rubocop-rspec_rails
+  - rubocop-factory_bot
+  - rubocop-rake
 
 AllCops:
   NewCops: enable
@@ -38,9 +41,6 @@ Rails/UnknownEnv:
 Gemspec/DevelopmentDependencies:
   Enabled: false
 
-RSpec/FilePath:
-  Enabled: false
-
 Rails:
   Enabled: true
 
@@ -67,10 +67,6 @@ Layout/MultilineBlockLayout:
     - spec/**/*
 
 Layout/MultilineMethodCallIndentation:
-  Exclude:
-    - spec/**/*
-
-RSpec/MultipleMemoizedHelpers:
   Exclude:
     - spec/**/*
 
@@ -102,11 +98,11 @@ Style/RescueModifier:
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
     default: ()
-    '%i':   '[]'
-    '%I':   '[]'
-    '%r':   '{}'
-    '%w':   '[]'
-    '%W':   '[]'
+    "%i": "[]"
+    "%I": "[]"
+    "%r": "{}"
+    "%w": "[]"
+    "%W": "[]"
 
 Style/FormatStringToken:
   Enabled: false
@@ -197,6 +193,16 @@ Lint/EmptyBlock:
   Exclude:
     - spec/factories/**/*
 
+Rails/FilePath:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Exclude:
+    - spec/**/*
+
 RSpec/MultipleExpectations:
   Enabled: false
 
@@ -210,4 +216,7 @@ RSpec/RepeatedExampleGroupBody:
   Enabled: false
 
 RSpec/ExampleLength:
+  Enabled: false
+
+RSpecRails/InferredSpecType:
   Enabled: false

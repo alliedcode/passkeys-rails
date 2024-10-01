@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "CHANGELOG.md", "MIT-LICENSE", "Rakefile", "README.md"]
   end
 
-  spec.add_runtime_dependency 'rails', '~> 7.0', '>= 7.0.5'
+  spec.add_runtime_dependency 'rails', '~> 7.2', '>= 7.2.1'
 
   spec.add_dependency "interactor", "~> 3.1.2"
   spec.add_dependency "jwt", "~> 2.9.1"
@@ -29,27 +29,31 @@ Gem::Specification.new do |spec|
   # Temproarily add this to get the latest version of cbor (while we wait for webauthn to update)
   spec.add_dependency "cbor", "~> 0.5.9.8"
 
-  spec.add_development_dependency "dotenv", "~> 2.8.1"
-  spec.add_development_dependency "puma", "~> 5.6.5"
-  spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "sprockets-rails", "~> 3.4.2"
-  spec.add_development_dependency "sqlite3", "~> 1.6.3"
+  spec.add_development_dependency "dotenv", "~> 3.1.4"
+  spec.add_development_dependency "puma", "~> 6.4.3"
+  spec.add_development_dependency "rake", "~> 13.2.1"
+  spec.add_development_dependency "sprockets-rails", "~> 3.5.2"
+  spec.add_development_dependency "sqlite3", "~> 2.1.0"
 
-  spec.add_development_dependency "codecov", "~> 0.2.12"
-  spec.add_development_dependency "debug", "~> 1.8.0"
-  spec.add_development_dependency "simplecov", "~> 0.22.0"
+  spec.add_development_dependency "codecov", "~> 0.6.0"
+  spec.add_development_dependency "debug", "~> 1.9.2"
+  spec.add_development_dependency "simplecov", "~> 0.21.2"
 
-  spec.add_development_dependency "reek", "~> 6.1.4"
+  spec.add_development_dependency "reek", "~> 6.3.0"
 
-  spec.add_development_dependency "factory_bot_rails", "~> 6.2.0"
-  spec.add_development_dependency "generator_spec", "~> 0.9.4"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rspec-rails", "~> 6.0.3"
-  spec.add_development_dependency "timecop", "~> 0.9.6"
+  spec.add_development_dependency "factory_bot_rails", "~> 6.4.3"
+  spec.add_development_dependency "generator_spec", "~> 0.10.0"
+  spec.add_development_dependency "rspec", "~> 3.13.0"
+  spec.add_development_dependency "rspec-rails", "~> 7.0.1"
+  spec.add_development_dependency "timecop", "~> 0.9.10"
 
-  spec.add_development_dependency "rubocop", "~> 1.21"
-  spec.add_development_dependency 'rubocop-performance', "~> 1.18.0"
-  spec.add_development_dependency "rubocop-rails", "~> 2.20.2"
+  spec.add_development_dependency "rubocop", "~> 1.66.1"
+  spec.add_development_dependency 'rubocop-performance', "~> 1.22.1"
+  spec.add_development_dependency "rubocop-rails", "~> 2.26.2"
   spec.add_development_dependency 'rubocop-rake', "~> 0.6.0"
-  spec.add_development_dependency 'rubocop-rspec', "~> 2.22.0"
+  spec.add_development_dependency 'rubocop-rspec_rails', "~> 2.30.0"
+  spec.add_development_dependency 'rubocop-factory_bot', "~> 2.26.1"
+
+  spec.add_development_dependency 'danger-changelog', '~> 0.7.0'
+  spec.add_development_dependency 'danger-toc', '~> 0.2.0'
 end

@@ -7,8 +7,8 @@ RSpec.describe PasskeysRails::PasskeysController do
     let(:params) { {} }
     let(:headers) { {} }
 
-    it 'raises a routing error' do
-      expect { call_api }.to raise_error(ActionController::RoutingError)
+    it 'responds that there are no matching routes' do
+      expect(call_api).to eq 404
     end
   end
 
