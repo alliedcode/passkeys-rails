@@ -24,8 +24,10 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'rails', '~> 7.0', '>= 7.0.5'
 
   spec.add_dependency "interactor", "~> 3.1.2"
-  spec.add_dependency "jwt", "~> 2.7.1"
-  spec.add_dependency "webauthn", "~> 3.0.0"
+  spec.add_dependency "jwt", "~> 2.9.1"
+  spec.add_dependency "webauthn", "~> 3.1.0"
+  # Temproarily add this to get the latest version of cbor (while we wait for webauthn to update)
+  spec.add_dependency "cbor", "~> 0.5.9.8"
 
   spec.add_development_dependency "dotenv", "~> 2.8.1"
   spec.add_development_dependency "puma", "~> 5.6.5"

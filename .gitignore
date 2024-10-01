@@ -22,3 +22,4 @@
 .vscode
 spec/dummy/db/migrate/*_create_passkeys_rails_agents.passkeys_rails.rb
 spec/dummy/db/migrate/*_create_passkeys_rails_passkeys.passkeys_rails.rb
+*.breakpoints

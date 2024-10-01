@@ -2,10 +2,11 @@ PATH
   remote: .
   specs:
     passkeys-rails (0.3.1)
+      cbor (~> 0.5.9.8)
       interactor (~> 3.1.2)
-      jwt (~> 2.7.1)
+      jwt (~> 2.9.1)
       rails (~> 7.0, >= 7.0.5)
-      webauthn (~> 3.0.0)
+      webauthn (~> 3.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -78,9 +79,10 @@ GEM
     android_key_attestation (0.3.0)
     ast (2.4.2)
     awrence (1.2.1)
+    base64 (0.2.0)
     bindata (2.4.15)
     builder (3.2.4)
-    cbor (0.5.9.6)
+    cbor (0.5.9.8)
     codecov (0.2.12)
       json
       simplecov
@@ -114,7 +116,8 @@ GEM
     irb (1.7.0)
       reline (>= 0.3.0)
     json (2.6.3)
-    jwt (2.7.1)
+    jwt (2.9.1)
+      base64
     kwalify (0.7.2)
     loofah (2.21.3)
       crass (~> 1.0.2)
@@ -270,7 +273,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
-    webauthn (3.0.0)
+    webauthn (3.1.0)
       android_key_attestation (~> 0.3.0)
       awrence (~> 1.1)
       bindata (~> 2.4)

@@ -6,6 +6,7 @@ module Requests
     alias response_headers headers
 
     def success
+      expect(error.compact).to be_blank # get better spec output
       expect(error.compact).to be_empty
       expect(response).to be_successful
     end
