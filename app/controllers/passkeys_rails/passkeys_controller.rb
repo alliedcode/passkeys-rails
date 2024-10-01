@@ -19,7 +19,7 @@ module PasskeysRails
     end
 
     def register
-      cookie_data = JSON.parse(cookies.signed["passkeys_rails"]) || {}
+      cookie_data = JSON.parse(cookies.signed["passkeys_rails"] || "{}")
       result = PasskeysRails::FinishRegistration.call!(credential: attestation_credential_params.to_h,
                                                        authenticatable_info: authenticatable_params&.to_h,
                                                        username: cookie_data["username"],
@@ -31,7 +31,7 @@ module PasskeysRails
     end
 
     def authenticate
-      cookie_data = JSON.parse(cookies.signed["passkeys_rails"]) || {}
+      cookie_data = JSON.parse(cookies.signed["passkeys_rails"] || "{}")
       result = PasskeysRails::FinishAuthentication.call!(credential: authentication_params.to_h,
                                                          challenge: cookie_data["challenge"])
 
