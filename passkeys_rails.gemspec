@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "CHANGELOG.md", "MIT-LICENSE", "Rakefile", "README.md"]
   end
 
-  spec.add_runtime_dependency 'rails', '~> 7.2', '>= 7.2.1'
+  spec.add_runtime_dependency 'rails', '>= 7.2'
 
   spec.add_dependency "interactor", "~> 3.1.2"
   spec.add_dependency "jwt", "~> 2.9.1"
