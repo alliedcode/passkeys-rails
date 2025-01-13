@@ -1,6 +1,7 @@
-### 0.3.3 (Next)
+### 0.3.3 (2025/01/13)
 
-- Your contribution here.
+- Avoid double encoding the challenge
+- Relax rails version constraint
 
 ### 0.3.2 (2024/10/01)
 
