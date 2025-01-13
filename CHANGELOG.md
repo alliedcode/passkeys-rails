@@ -1,6 +1,6 @@
 ### 0.3.3 (2025/01/13)
 
-- Avoid double encoding the challenge
+- Avoid double encoding the auth challenge
 - Relax rails version constraint
 
 ### 0.3.2 (2024/10/01)
