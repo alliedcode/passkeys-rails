@@ -28,7 +28,7 @@ module PasskeysRails
     def cookie_data(options)
       {
         username:,
-        challenge: WebAuthn.standard_encoder.encode(options.challenge)
+        challenge: options.challenge
       }
     end
   end
