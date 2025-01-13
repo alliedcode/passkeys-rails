@@ -1,3 +1,7 @@
+### 0.3.4 (Next)
+
+- Your contribution here.
+
 ### 0.3.3 (2025/01/13)
 
 - Avoid double encoding the auth challenge
