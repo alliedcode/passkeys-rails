@@ -37,7 +37,7 @@ In mobile apps, leverage the platform specific Passkeys APIs for ***registration
 
 **PasskeysRails** does not require any application specific models, but it's often useful to have one.  For example, a User model can be created at registration.  **PasskeysRails** provides two mechanisms to support this.  Either provide the name of the model in the `authenticatable_class` param when calling the `finishRegistration` endpoint, or set a `default_class` in `config/initializers/passkeys_rails.rb`.
 
-**PasskeysRails** supports multiple different application specific models.  Whatever model name supplied when calling the `finishRegistration` endpoint will be created during a successful the `finishRegiration` process. When created, it will be provided an opportunity to do any initialization at that time.
+**PasskeysRails** supports multiple different application specific models.  Whatever model name supplied when calling the `finishRegistration` endpoint will be created during a successful the `finishRegistration` process. When created, it will be provided an opportunity to do any initialization at that time.
 
 There are two **PasskeysRails** configuration options related to this: `default_class` and `class_whitelist`:
 
